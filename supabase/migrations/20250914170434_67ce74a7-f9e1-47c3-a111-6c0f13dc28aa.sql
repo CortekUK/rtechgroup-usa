@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS public.org_settings (
 ALTER TABLE public.org_settings ENABLE ROW LEVEL SECURITY;
 
 -- Create RLS policies for org_settings
+DROP POLICY IF EXISTS "Allow all operations for app users" ON public.org_settings;
 CREATE POLICY "Allow all operations for app users" ON public.org_settings
 FOR ALL USING (true) WITH CHECK (true);
 
@@ -41,6 +42,7 @@ CREATE TABLE IF NOT EXISTS public.maintenance_runs (
 ALTER TABLE public.maintenance_runs ENABLE ROW LEVEL SECURITY;
 
 -- Create RLS policies for maintenance_runs
+DROP POLICY IF EXISTS "Allow all operations for app users" ON public.maintenance_runs;
 CREATE POLICY "Allow all operations for app users" ON public.maintenance_runs
 FOR ALL USING (true) WITH CHECK (true);
 
@@ -60,10 +62,16 @@ CREATE TABLE IF NOT EXISTS public.settings_audit (
 ALTER TABLE public.settings_audit ENABLE ROW LEVEL SECURITY;
 
 -- Create RLS policies for settings_audit
+DROP POLICY IF EXISTS "Allow all operations for app users" ON public.settings_audit;
 CREATE POLICY "Allow all operations for app users" ON public.settings_audit
 FOR ALL USING (true) WITH CHECK (true);
 
 -- Create trigger for org_settings updated_at
+-- Drop trigger first before dropping the function
+DROP TRIGGER IF EXISTS trg_org_settings_updated_at ON public.org_settings;
+
+DROP FUNCTION IF EXISTS public.set_updated_at();
+
 CREATE OR REPLACE FUNCTION public.set_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -72,11 +80,17 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trg_org_settings_updated_at ON public.org_settings;
 CREATE TRIGGER trg_org_settings_updated_at
 BEFORE UPDATE ON public.org_settings
 FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 
 -- Create audit trigger function
+-- Drop trigger first before dropping the function
+DROP TRIGGER IF EXISTS trg_org_settings_audit ON public.org_settings;
+
+DROP FUNCTION IF EXISTS public.audit_settings_changes();
+
 CREATE OR REPLACE FUNCTION public.audit_settings_changes()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -123,6 +137,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Create audit trigger for org_settings
+DROP TRIGGER IF EXISTS trg_org_settings_audit ON public.org_settings;
 CREATE TRIGGER trg_org_settings_audit
 AFTER INSERT OR UPDATE OR DELETE ON public.org_settings
 FOR EACH ROW EXECUTE FUNCTION public.audit_settings_changes();

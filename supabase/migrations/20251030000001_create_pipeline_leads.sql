@@ -24,6 +24,11 @@ CREATE INDEX IF NOT EXISTS idx_leads_follow_up_date ON public.leads(follow_up_da
 CREATE INDEX IF NOT EXISTS idx_leads_converted_customer ON public.leads(converted_to_customer_id);
 
 -- Create trigger to update updated_at timestamp
+-- Drop trigger first before dropping the function
+DROP TRIGGER IF EXISTS trigger_update_leads_updated_at ON public.leads;
+
+DROP FUNCTION IF EXISTS update_leads_updated_at();
+
 CREATE OR REPLACE FUNCTION update_leads_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -32,6 +37,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
+DROP TRIGGER IF EXISTS trigger_update_leads_updated_at ON public.leads;
 CREATE TRIGGER trigger_update_leads_updated_at
   BEFORE UPDATE ON public.leads
   FOR EACH ROW
@@ -41,6 +47,7 @@ CREATE TRIGGER trigger_update_leads_updated_at
 ALTER TABLE public.leads ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policy: Allow authenticated users full access
+DROP POLICY IF EXISTS "Allow authenticated users to manage leads" ON public.leads;
 CREATE POLICY "Allow authenticated users to manage leads"
   ON public.leads
   FOR ALL

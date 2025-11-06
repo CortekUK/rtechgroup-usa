@@ -1,4 +1,6 @@
 -- Update the process_payment_transaction function to use proper constraint names and return clean JSON
+DROP FUNCTION IF EXISTS public.process_payment_transaction();
+
 CREATE OR REPLACE FUNCTION public.process_payment_transaction(p_payment_id uuid, p_customer_id uuid, p_rental_id uuid, p_vehicle_id uuid, p_amount numeric, p_payment_type text, p_payment_date date)
 RETURNS jsonb
 LANGUAGE plpgsql

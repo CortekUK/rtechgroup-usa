@@ -3,6 +3,8 @@
 
 DROP TRIGGER IF EXISTS vehicle_acquisition_trigger ON vehicles;
 
+DROP FUNCTION IF EXISTS public.trigger_post_acquisition();
+
 CREATE OR REPLACE FUNCTION public.trigger_post_acquisition()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -32,6 +34,7 @@ BEGIN
 END $function$;
 
 -- Recreate the trigger
+DROP TRIGGER IF EXISTS vehicle_acquisition_trigger ON vehicles;
 CREATE TRIGGER vehicle_acquisition_trigger
   AFTER INSERT OR UPDATE ON vehicles
   FOR EACH ROW

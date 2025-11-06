@@ -2,31 +2,76 @@
 -- This will remove all data to allow fresh testing
 
 -- Clear payment applications first (foreign key dependencies)
-DELETE FROM payment_applications;
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'payment_applications') THEN
+    DELETE FROM payment_applications;
+  END IF;
+END $$;
 
 -- Clear payments
-DELETE FROM payments;
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'payments') THEN
+    DELETE FROM payments;
+  END IF;
+END $$;
 
 -- Clear ledger entries
-DELETE FROM ledger_entries;
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'ledger_entries') THEN
+    DELETE FROM ledger_entries;
+  END IF;
+END $$;
 
 -- Clear authority payments
-DELETE FROM authority_payments;
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'authority_payments') THEN
+    DELETE FROM authority_payments;
+  END IF;
+END $$;
 
 -- Clear fines
-DELETE FROM fines;
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'fines') THEN
+    DELETE FROM fines;
+  END IF;
+END $$;
 
 -- Clear rentals
-DELETE FROM rentals;
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'rentals') THEN
+    DELETE FROM rentals;
+  END IF;
+END $$;
 
 -- Clear reminder events
-DELETE FROM reminder_events;
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'reminder_events') THEN
+    DELETE FROM reminder_events;
+  END IF;
+END $$;
 
 -- Clear reminder logs
-DELETE FROM reminder_logs;
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'reminder_logs') THEN
+    DELETE FROM reminder_logs;
+  END IF;
+END $$;
 
 -- Clear P&L entries
-DELETE FROM pnl_entries;
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'pnl_entries') THEN
+    DELETE FROM pnl_entries;
+  END IF;
+END $$;
 
 -- Reset vehicle status to Available
 UPDATE vehicles SET status = 'Available';

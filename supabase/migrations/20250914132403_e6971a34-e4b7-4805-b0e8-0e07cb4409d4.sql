@@ -30,6 +30,7 @@ ON public.pnl_entries(reference) WHERE reference IS NOT NULL;
 ALTER TABLE public.service_records ENABLE ROW LEVEL SECURITY;
 
 -- Create RLS policy for service_records (same as other tables)
+DROP POLICY IF EXISTS "Allow all operations for app users" ON public.service_records;
 CREATE POLICY "Allow all operations for app users" 
 ON public.service_records 
 FOR ALL 
@@ -38,6 +39,8 @@ USING (true)
 WITH CHECK (true);
 
 -- Function to update vehicle last service from latest record
+DROP FUNCTION IF EXISTS public.update_vehicle_last_service();
+
 CREATE OR REPLACE FUNCTION public.update_vehicle_last_service(p_vehicle_id uuid)
 RETURNS void
 LANGUAGE plpgsql
@@ -70,6 +73,8 @@ END;
 $$;
 
 -- Function to upsert service P&L entry
+DROP FUNCTION IF EXISTS public.upsert_service_pnl_entry();
+
 CREATE OR REPLACE FUNCTION public.upsert_service_pnl_entry(
   p_service_record_id uuid,
   p_cost numeric,
@@ -105,6 +110,9 @@ END;
 $$;
 
 -- Trigger function to update last service automatically
+-- Drop trigger first before dropping the function
+DROP FUNCTION IF EXISTS public.trigger_update_vehicle_last_service();
+
 CREATE OR REPLACE FUNCTION public.trigger_update_vehicle_last_service()
 RETURNS trigger
 LANGUAGE plpgsql

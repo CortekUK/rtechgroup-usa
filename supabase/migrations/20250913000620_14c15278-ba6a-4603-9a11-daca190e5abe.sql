@@ -1,4 +1,6 @@
 -- Update the existing payment_apply_fifo function to handle different categories
+DROP FUNCTION IF EXISTS public.payment_apply_fifo();
+
 CREATE OR REPLACE FUNCTION public.payment_apply_fifo(p_id UUID)
 RETURNS VOID
 LANGUAGE plpgsql

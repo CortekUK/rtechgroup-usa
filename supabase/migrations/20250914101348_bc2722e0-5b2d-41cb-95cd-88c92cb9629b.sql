@@ -1,4 +1,6 @@
 -- Fix customer balance calculation to include correct payment types
+DROP FUNCTION IF EXISTS public.get_customer_balance_with_status();
+
 CREATE OR REPLACE FUNCTION public.get_customer_balance_with_status(customer_id_param uuid)
  RETURNS TABLE(balance numeric, status text, total_charges numeric, total_payments numeric)
  LANGUAGE plpgsql

@@ -11,6 +11,8 @@ WHERE rental_number IS NULL;
 CREATE INDEX IF NOT EXISTS idx_rentals_rental_number ON public.rentals(rental_number);
 
 -- Add trigger to auto-generate rental_number for new rentals
+DROP FUNCTION IF EXISTS generate_rental_number();
+
 CREATE OR REPLACE FUNCTION generate_rental_number()
 RETURNS TRIGGER AS $$
 BEGIN

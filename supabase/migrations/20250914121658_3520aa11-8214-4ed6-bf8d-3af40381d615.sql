@@ -1,4 +1,6 @@
 -- Enhanced pnl_post_acquisition to handle both Purchase and Finance upfront accounting
+DROP FUNCTION IF EXISTS public.pnl_post_acquisition();
+
 CREATE OR REPLACE FUNCTION public.pnl_post_acquisition(v_id uuid)
  RETURNS void
  LANGUAGE plpgsql
@@ -53,6 +55,8 @@ END;
 $function$;
 
 -- Update trigger to handle finance field changes
+DROP FUNCTION IF EXISTS public.trigger_post_acquisition();
+
 CREATE OR REPLACE FUNCTION public.trigger_post_acquisition()
  RETURNS trigger
  LANGUAGE plpgsql
@@ -100,6 +104,8 @@ END;
 $function$;
 
 -- Function to check if a vehicle has upfront finance P&L entry
+DROP FUNCTION IF EXISTS public.has_upfront_finance_entry();
+
 CREATE OR REPLACE FUNCTION public.has_upfront_finance_entry(v_id uuid)
  RETURNS boolean
  LANGUAGE plpgsql
@@ -133,7 +139,10 @@ END $$;
 
 -- Clean up incremental finance P&L entries for vehicles that now have upfront entries
 -- This prevents double-counting
-DELETE FROM pnl_entries 
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'pnl_entries') THEN
+    DELETE FROM pnl_entries 
 WHERE category = 'Finance' 
 AND side = 'Cost'
 AND vehicle_id IN (
@@ -142,3 +151,5 @@ AND vehicle_id IN (
   WHERE category = 'Acquisition' 
   AND source_ref LIKE 'FIN-UPFRONT:%'
 );
+  END IF;
+END $$;

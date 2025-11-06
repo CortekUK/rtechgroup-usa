@@ -1,5 +1,5 @@
 -- Drop and recreate the function with correct parameter name
-DROP FUNCTION public.recalculate_vehicle_pl(uuid);
+DROP FUNCTION IF EXISTS public.recalculate_vehicle_pl(uuid);
 
 CREATE OR REPLACE FUNCTION public.recalculate_vehicle_pl(p_vehicle_id UUID)
 RETURNS VOID 

@@ -67,6 +67,7 @@ ALTER TABLE public.vehicle_events ENABLE ROW LEVEL SECURITY;
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'vehicle_files' AND policyname = 'Allow all operations for app users on vehicle_files') THEN
+        DROP POLICY IF EXISTS "Allow all operations for app users on vehicle_files" ON public.vehicle_files;
         CREATE POLICY "Allow all operations for app users on vehicle_files" 
         ON public.vehicle_files FOR ALL 
         USING (true) 
@@ -74,6 +75,7 @@ BEGIN
     END IF;
 
     IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'vehicle_expenses' AND policyname = 'Allow all operations for app users on vehicle_expenses') THEN
+        DROP POLICY IF EXISTS "Allow all operations for app users on vehicle_expenses" ON public.vehicle_expenses;
         CREATE POLICY "Allow all operations for app users on vehicle_expenses" 
         ON public.vehicle_expenses FOR ALL 
         USING (true) 
@@ -81,6 +83,7 @@ BEGIN
     END IF;
 
     IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE tablename = 'vehicle_events' AND policyname = 'Allow all operations for app users on vehicle_events') THEN
+        DROP POLICY IF EXISTS "Allow all operations for app users on vehicle_events" ON public.vehicle_events;
         CREATE POLICY "Allow all operations for app users on vehicle_events" 
         ON public.vehicle_events FOR ALL 
         USING (true) 
@@ -104,24 +107,28 @@ ON CONFLICT (id) DO NOTHING;
 DO $$
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM storage.policies WHERE name = 'Users can view vehicle files') THEN
+        DROP POLICY IF EXISTS "Users can view vehicle files" ON storage.objects;
         CREATE POLICY "Users can view vehicle files" 
         ON storage.objects FOR SELECT 
         USING (bucket_id = 'vehicle-files');
     END IF;
 
     IF NOT EXISTS (SELECT 1 FROM storage.policies WHERE name = 'Users can upload vehicle files') THEN
+        DROP POLICY IF EXISTS "Users can upload vehicle files" ON storage.objects;
         CREATE POLICY "Users can upload vehicle files" 
         ON storage.objects FOR INSERT 
         WITH CHECK (bucket_id = 'vehicle-files');
     END IF;
 
     IF NOT EXISTS (SELECT 1 FROM storage.policies WHERE name = 'Users can update vehicle files') THEN
+        DROP POLICY IF EXISTS "Users can update vehicle files" ON storage.objects;
         CREATE POLICY "Users can update vehicle files" 
         ON storage.objects FOR UPDATE 
         USING (bucket_id = 'vehicle-files');
     END IF;
 
     IF NOT EXISTS (SELECT 1 FROM storage.policies WHERE name = 'Users can delete vehicle files') THEN
+        DROP POLICY IF EXISTS "Users can delete vehicle files" ON storage.objects;
         CREATE POLICY "Users can delete vehicle files" 
         ON storage.objects FOR DELETE 
         USING (bucket_id = 'vehicle-files');

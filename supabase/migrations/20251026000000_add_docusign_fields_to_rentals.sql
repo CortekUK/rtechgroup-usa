@@ -9,10 +9,10 @@ ADD COLUMN envelope_sent_at TIMESTAMPTZ,
 ADD COLUMN envelope_completed_at TIMESTAMPTZ;
 
 -- Create index for faster lookups by envelope_id
-CREATE INDEX idx_rentals_docusign_envelope_id ON rentals(docusign_envelope_id);
+CREATE INDEX IF NOT EXISTS idx_rentals_docusign_envelope_id ON rentals(docusign_envelope_id);
 
 -- Create index for document status filtering
-CREATE INDEX idx_rentals_document_status ON rentals(document_status);
+CREATE INDEX IF NOT EXISTS idx_rentals_document_status ON rentals(document_status);
 
 -- Add comment
 COMMENT ON COLUMN rentals.docusign_envelope_id IS 'DocuSign envelope ID for the rental agreement';

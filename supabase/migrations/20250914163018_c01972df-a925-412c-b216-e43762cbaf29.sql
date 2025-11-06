@@ -58,16 +58,24 @@ ALTER TABLE reminder_actions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE reminder_emails ENABLE ROW LEVEL SECURITY;
 
 -- RLS policies for admin access
+DROP POLICY IF EXISTS "Allow all operations for app users on reminders" ON reminders;
 CREATE POLICY "Allow all operations for app users on reminders" 
 ON reminders FOR ALL TO authenticated USING (true) WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow all operations for app users on reminder_actions" ON reminder_actions;
 CREATE POLICY "Allow all operations for app users on reminder_actions" 
 ON reminder_actions FOR ALL TO authenticated USING (true) WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow all operations for app users on reminder_emails" ON reminder_emails;
 CREATE POLICY "Allow all operations for app users on reminder_emails" 
 ON reminder_emails FOR ALL TO authenticated USING (true) WITH CHECK (true);
 
 -- Function to update updated_at timestamp
+-- Drop trigger first before dropping the function
+DROP TRIGGER IF EXISTS update_reminders_updated_at ON reminders;
+
+DROP FUNCTION IF EXISTS update_reminders_updated_at();
+
 CREATE OR REPLACE FUNCTION update_reminders_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -77,6 +85,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Trigger for updated_at
+DROP TRIGGER IF EXISTS update_reminders_updated_at ON reminders;
 CREATE TRIGGER update_reminders_updated_at
   BEFORE UPDATE ON reminders
   FOR EACH ROW
@@ -93,6 +102,7 @@ CREATE TABLE IF NOT EXISTS reminder_config (
 -- Enable RLS on config
 ALTER TABLE reminder_config ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Allow all operations for app users on reminder_config" ON reminder_config;
 CREATE POLICY "Allow all operations for app users on reminder_config" 
 ON reminder_config FOR ALL TO authenticated USING (true) WITH CHECK (true);
 

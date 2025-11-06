@@ -1,4 +1,5 @@
 -- Add policy to allow users to update their own password change flag
+DROP POLICY IF EXISTS "p_update_own_password_flag" ON public.app_users;
 CREATE POLICY "p_update_own_password_flag" ON public.app_users
 FOR UPDATE 
 USING (auth_user_id = auth.uid())

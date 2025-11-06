@@ -1,4 +1,6 @@
 -- Fix generate_next_rental_charge to use rental_create_charge function which handles conflicts
+DROP FUNCTION IF EXISTS public.generate_next_rental_charge();
+
 CREATE OR REPLACE FUNCTION public.generate_next_rental_charge(r_id uuid)
  RETURNS void
  LANGUAGE plpgsql

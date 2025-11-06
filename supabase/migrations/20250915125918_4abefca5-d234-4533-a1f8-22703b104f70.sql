@@ -17,6 +17,7 @@ CREATE TABLE public.reminder_rules (
 ALTER TABLE public.reminder_rules ENABLE ROW LEVEL SECURITY;
 
 -- Create policy for app users
+DROP POLICY IF EXISTS "Allow all operations for app users on reminder_rules" ON public.reminder_rules;
 CREATE POLICY "Allow all operations for app users on reminder_rules"
 ON public.reminder_rules
 FOR ALL
@@ -24,6 +25,7 @@ USING (true)
 WITH CHECK (true);
 
 -- Add updated_at trigger
+DROP TRIGGER IF EXISTS update_reminder_rules_updated_at ON public.reminder_rules;
 CREATE TRIGGER update_reminder_rules_updated_at
   BEFORE UPDATE ON public.reminder_rules
   FOR EACH ROW

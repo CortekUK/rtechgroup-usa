@@ -1,6 +1,8 @@
 -- Fix the trigger function to use correct category name for ledger entries
 -- The ledger_entries check constraint expects 'Fine' (singular), not 'Fines' (plural)
 
+DROP FUNCTION IF EXISTS public.trigger_create_fine_charge();
+
 CREATE OR REPLACE FUNCTION public.trigger_create_fine_charge()
  RETURNS trigger
  LANGUAGE plpgsql

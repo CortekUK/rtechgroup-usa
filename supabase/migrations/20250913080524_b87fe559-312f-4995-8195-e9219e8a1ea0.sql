@@ -19,9 +19,10 @@ CREATE TABLE IF NOT EXISTS public.customer_documents (
 ALTER TABLE public.customer_documents ENABLE ROW LEVEL SECURITY;
 
 -- Create RLS policy
+DROP POLICY IF EXISTS "Allow all operations for authenticated users" ON public.customer_documents;
 CREATE POLICY "Allow all operations for authenticated users" ON public.customer_documents
 FOR ALL USING (true);
 
 -- Add indexes for performance
-CREATE INDEX idx_customer_documents_customer_id ON public.customer_documents(customer_id);
-CREATE INDEX idx_customer_documents_type ON public.customer_documents(document_type);
+CREATE INDEX IF NOT EXISTS idx_customer_documents_customer_id ON public.customer_documents(customer_id);
+CREATE INDEX IF NOT EXISTS idx_customer_documents_type ON public.customer_documents(document_type);

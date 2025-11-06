@@ -8,6 +8,8 @@ ON public.pnl_entries (source_ref)
 WHERE source_ref IS NOT NULL;
 
 -- Update the process_payment_transaction function to use correct constraint names
+DROP FUNCTION IF EXISTS public.process_payment_transaction();
+
 CREATE OR REPLACE FUNCTION public.process_payment_transaction(p_payment_id uuid, p_customer_id uuid, p_rental_id uuid, p_vehicle_id uuid, p_amount numeric, p_payment_type text, p_payment_date date)
  RETURNS jsonb
  LANGUAGE plpgsql

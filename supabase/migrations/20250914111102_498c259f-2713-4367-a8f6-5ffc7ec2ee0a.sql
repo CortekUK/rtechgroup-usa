@@ -1,16 +1,28 @@
 -- Fix Initial Fee and Rental Charge Logic
 -- 1. Clean up existing incorrect data first
-DELETE FROM ledger_entries WHERE payment_id IN (
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'ledger_entries') THEN
+    DELETE FROM ledger_entries WHERE payment_id IN (
   SELECT id FROM payments WHERE payment_type = 'InitialFee'
 );
+  END IF;
+END $$;
 
 -- 2. Remove all future rental charges (keep only current month charges)
-DELETE FROM ledger_entries 
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'ledger_entries') THEN
+    DELETE FROM ledger_entries 
 WHERE type = 'Charge' 
   AND category = 'Rental' 
   AND due_date > CURRENT_DATE;
+  END IF;
+END $$;
 
 -- 3. Create corrected backfill function that only creates first month charge
+DROP FUNCTION IF EXISTS public.backfill_rental_charges_first_month_only();
+
 CREATE OR REPLACE FUNCTION public.backfill_rental_charges_first_month_only()
 RETURNS void
 LANGUAGE plpgsql
@@ -38,6 +50,8 @@ END;
 $$;
 
 -- 4. Update process_payment_transaction to handle InitialFee correctly
+DROP FUNCTION IF EXISTS public.process_payment_transaction();
+
 CREATE OR REPLACE FUNCTION public.process_payment_transaction(p_payment_id uuid)
 RETURNS jsonb
 LANGUAGE plpgsql

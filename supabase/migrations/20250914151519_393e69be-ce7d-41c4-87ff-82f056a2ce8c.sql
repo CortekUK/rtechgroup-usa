@@ -1,6 +1,8 @@
 -- Fix security issues for the new insurance functions
 
 -- Fix update_insurance_docs_count function
+DROP FUNCTION IF EXISTS public.update_insurance_docs_count();
+
 CREATE OR REPLACE FUNCTION public.update_insurance_docs_count()
 RETURNS TRIGGER 
 LANGUAGE plpgsql
@@ -24,6 +26,8 @@ END;
 $$;
 
 -- Fix check_policy_overlap function
+DROP FUNCTION IF EXISTS public.check_policy_overlap();
+
 CREATE OR REPLACE FUNCTION public.check_policy_overlap(
   p_customer_id UUID,
   p_vehicle_id UUID,
@@ -61,6 +65,8 @@ END;
 $$;
 
 -- Fix recalculate_insurance_status function
+DROP FUNCTION IF EXISTS public.recalculate_insurance_status();
+
 CREATE OR REPLACE FUNCTION public.recalculate_insurance_status()
 RETURNS TABLE(
   updated_policies INTEGER,

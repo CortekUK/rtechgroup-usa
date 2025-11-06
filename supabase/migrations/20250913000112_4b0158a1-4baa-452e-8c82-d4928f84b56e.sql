@@ -33,9 +33,11 @@ ALTER TABLE public.fines ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.fine_files ENABLE ROW LEVEL SECURITY;
 
 -- Create RLS policies
+DROP POLICY IF EXISTS "Allow all operations for authenticated users" ON public.fines;
 CREATE POLICY "Allow all operations for authenticated users" ON public.fines
 FOR ALL TO authenticated USING (true);
 
+DROP POLICY IF EXISTS "Allow all operations for authenticated users" ON public.fine_files;
 CREATE POLICY "Allow all operations for authenticated users" ON public.fine_files
 FOR ALL TO authenticated USING (true);
 
@@ -43,19 +45,25 @@ FOR ALL TO authenticated USING (true);
 INSERT INTO storage.buckets (id, name, public) VALUES ('fine-evidence', 'fine-evidence', false);
 
 -- Create storage policies
+DROP POLICY IF EXISTS "Authenticated users can view fine evidence" ON storage.objects;
 CREATE POLICY "Authenticated users can view fine evidence" ON storage.objects
 FOR SELECT TO authenticated USING (bucket_id = 'fine-evidence');
 
+DROP POLICY IF EXISTS "Authenticated users can upload fine evidence" ON storage.objects;
 CREATE POLICY "Authenticated users can upload fine evidence" ON storage.objects
 FOR INSERT TO authenticated WITH CHECK (bucket_id = 'fine-evidence');
 
+DROP POLICY IF EXISTS "Authenticated users can update fine evidence" ON storage.objects;
 CREATE POLICY "Authenticated users can update fine evidence" ON storage.objects
 FOR UPDATE TO authenticated USING (bucket_id = 'fine-evidence');
 
+DROP POLICY IF EXISTS "Authenticated users can delete fine evidence" ON storage.objects;
 CREATE POLICY "Authenticated users can delete fine evidence" ON storage.objects
 FOR DELETE TO authenticated USING (bucket_id = 'fine-evidence');
 
 -- Function to create fine charge in ledger
+DROP FUNCTION IF EXISTS public.fine_create_charge();
+
 CREATE OR REPLACE FUNCTION public.fine_create_charge(f_id UUID)
 RETURNS UUID
 LANGUAGE plpgsql
@@ -103,6 +111,8 @@ BEGIN
 END $$;
 
 -- Function to apply payments to fine charges using FIFO
+DROP FUNCTION IF EXISTS public.fine_apply_payment_fifo();
+
 CREATE OR REPLACE FUNCTION public.fine_apply_payment_fifo(p_id UUID)
 RETURNS VOID
 LANGUAGE plpgsql
@@ -173,6 +183,8 @@ BEGIN
 END $$;
 
 -- Function to void fine charge (for successful appeals)
+DROP FUNCTION IF EXISTS public.fine_void_charge();
+
 CREATE OR REPLACE FUNCTION public.fine_void_charge(f_id UUID)
 RETURNS VOID
 LANGUAGE plpgsql
@@ -228,6 +240,11 @@ BEGIN
 END $$;
 
 -- Trigger to create charge when fine is created
+-- Drop trigger first before dropping the function
+DROP TRIGGER IF EXISTS fine_create_charge_trigger ON public.fines;
+
+DROP FUNCTION IF EXISTS public.trigger_create_fine_charge();
+
 CREATE OR REPLACE FUNCTION public.trigger_create_fine_charge()
 RETURNS TRIGGER
 LANGUAGE plpgsql
@@ -239,6 +256,7 @@ BEGIN
   RETURN NEW;
 END $$;
 
+DROP TRIGGER IF EXISTS fine_create_charge_trigger ON public.fines;
 CREATE TRIGGER fine_create_charge_trigger
   AFTER INSERT ON public.fines
   FOR EACH ROW EXECUTE FUNCTION public.trigger_create_fine_charge();

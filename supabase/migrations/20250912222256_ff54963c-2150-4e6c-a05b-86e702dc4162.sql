@@ -1,4 +1,7 @@
 -- Fix the recalculate_vehicle_pl function with proper column references
+-- Drop the old function first to avoid parameter name conflicts
+DROP FUNCTION IF EXISTS public.recalculate_vehicle_pl(UUID);
+
 CREATE OR REPLACE FUNCTION public.recalculate_vehicle_pl(p_vehicle_id UUID)
 RETURNS VOID 
 LANGUAGE plpgsql
@@ -40,6 +43,8 @@ END;
 $$;
 
 -- Update the trigger function to use the corrected function name
+DROP FUNCTION IF EXISTS public.create_rental_charges();
+
 CREATE OR REPLACE FUNCTION public.create_rental_charges()
 RETURNS TRIGGER 
 LANGUAGE plpgsql

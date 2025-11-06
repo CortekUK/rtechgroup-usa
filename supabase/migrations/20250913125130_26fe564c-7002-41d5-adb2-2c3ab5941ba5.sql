@@ -1,4 +1,6 @@
 -- Create missing generate_next_rental_charge function
+DROP FUNCTION IF EXISTS public.generate_next_rental_charge();
+
 CREATE OR REPLACE FUNCTION public.generate_next_rental_charge(r_id uuid)
 RETURNS void
 LANGUAGE plpgsql
@@ -56,6 +58,8 @@ CREATE INDEX IF NOT EXISTS idx_ledger_rental_open
   WHERE type = 'Charge' AND category = 'Rental' AND remaining_amount > 0;
 
 -- Ensure apply_payment_fully function exists and is properly defined
+DROP FUNCTION IF EXISTS public.apply_payment_fully();
+
 CREATE OR REPLACE FUNCTION public.apply_payment_fully(p_payment_id uuid)
 RETURNS void
 LANGUAGE plpgsql
@@ -182,6 +186,8 @@ END;
 $$;
 
 -- Update trigger to call apply_payment_fully on payment insertion
+DROP FUNCTION IF EXISTS public.trigger_apply_payment_on_insert();
+
 CREATE OR REPLACE FUNCTION public.trigger_apply_payment_on_insert()
 RETURNS trigger
 LANGUAGE plpgsql

@@ -24,6 +24,8 @@ SET vehicle_id = assigned_vehicle_id
 WHERE vehicle_id IS NULL AND assigned_vehicle_id IS NOT NULL;
 
 -- Create function to handle plate P&L entries
+DROP FUNCTION IF EXISTS upsert_plate_pnl_entry();
+
 CREATE OR REPLACE FUNCTION upsert_plate_pnl_entry(
   p_plate_id uuid,
   p_cost numeric,
@@ -64,6 +66,8 @@ END;
 $$;
 
 -- Create trigger function for plates P&L integration
+DROP FUNCTION IF EXISTS trigger_update_plate_pnl();
+
 CREATE OR REPLACE FUNCTION trigger_update_plate_pnl()
 RETURNS trigger
 LANGUAGE plpgsql

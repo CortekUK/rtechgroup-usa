@@ -24,7 +24,7 @@ serve(async (req) => {
       });
     }
 
-    const supabaseUrl = 'https://wrogevjpvhvputrjhvvg.supabase.co';
+    const supabaseUrl = 'https://ypjthmlmbqggqvzoolnk.supabase.co';
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
     
     if (!serviceRoleKey) {

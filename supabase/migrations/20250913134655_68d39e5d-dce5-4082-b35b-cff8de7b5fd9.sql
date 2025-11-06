@@ -7,6 +7,8 @@ CREATE UNIQUE INDEX IF NOT EXISTS ux_pnl_initial_fee_once
   WHERE category = 'Initial Fees';
 
 -- Update apply_payment_fully function to create ledger entries for payments
+DROP FUNCTION IF EXISTS public.apply_payment_fully();
+
 CREATE OR REPLACE FUNCTION public.apply_payment_fully(p_payment_id uuid)
  RETURNS void
  LANGUAGE plpgsql

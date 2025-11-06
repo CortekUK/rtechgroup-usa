@@ -1,5 +1,7 @@
 -- Phase 1: Data Repair & Synchronization
 -- Create function to repair missing ledger entries for payments
+DROP FUNCTION IF EXISTS repair_missing_ledger_entries();
+
 CREATE OR REPLACE FUNCTION repair_missing_ledger_entries()
 RETURNS TEXT AS $$
 DECLARE
@@ -49,6 +51,8 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 
 -- Phase 4: System Integrity Monitoring
 -- Create function to check data consistency
+DROP FUNCTION IF EXISTS check_payment_data_integrity();
+
 CREATE OR REPLACE FUNCTION check_payment_data_integrity()
 RETURNS TABLE(
   issue_type TEXT,

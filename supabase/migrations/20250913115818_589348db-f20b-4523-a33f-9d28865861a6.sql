@@ -1,4 +1,7 @@
 -- Create trigger to auto-apply credit when new charges are created
+-- Drop trigger first before dropping the function
+DROP FUNCTION IF EXISTS auto_apply_customer_credit();
+
 CREATE OR REPLACE FUNCTION auto_apply_customer_credit()
 RETURNS TRIGGER AS $$
 DECLARE

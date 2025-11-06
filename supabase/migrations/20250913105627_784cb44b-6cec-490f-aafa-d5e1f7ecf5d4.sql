@@ -13,6 +13,8 @@ ON ledger_entries(rental_id, due_date)
 WHERE type = 'Charge' AND category = 'Rental';
 
 -- 3) Backfill rental charges through end_date (or today if end_date is null)
+DROP FUNCTION IF EXISTS backfill_rental_charges_full();
+
 CREATE OR REPLACE FUNCTION backfill_rental_charges_full()
 RETURNS void LANGUAGE plpgsql AS $$
 DECLARE
@@ -46,6 +48,8 @@ END;
 $$;
 
 -- 4) Backfill rental_id on existing payments by matching (customer_id, vehicle_id, payment_date) to an active rental
+DROP FUNCTION IF EXISTS attach_payments_to_rentals();
+
 CREATE OR REPLACE FUNCTION attach_payments_to_rentals()
 RETURNS void LANGUAGE plpgsql AS $$
 BEGIN
@@ -61,6 +65,8 @@ END;
 $$;
 
 -- 5) FIFO that allocates across ALL charges (due and future) for the rental
+DROP FUNCTION IF EXISTS payment_apply_fifo();
+
 CREATE OR REPLACE FUNCTION payment_apply_fifo(p_id uuid)
 RETURNS void LANGUAGE plpgsql AS $$
 DECLARE
@@ -76,6 +82,11 @@ BEGIN
   SELECT amount, rental_id, customer_id, vehicle_id, payment_date
     INTO v_amt, v_rental, v_customer, v_vehicle, v_pay_date
   FROM payments WHERE id = p_id;
+
+  -- Exit if payment not found or required fields are NULL
+  IF v_amt IS NULL OR v_date IS NULL THEN
+    RETURN;
+  END IF;
 
   -- Skip if no rental_id
   IF v_rental IS NULL THEN
@@ -126,6 +137,8 @@ END;
 $$;
 
 -- 6) Re-apply all payments chronologically (soft rebuild)
+DROP FUNCTION IF EXISTS reapply_all_payments();
+
 CREATE OR REPLACE FUNCTION reapply_all_payments()
 RETURNS void LANGUAGE plpgsql AS $$
 DECLARE
@@ -148,6 +161,8 @@ END;
 $$;
 
 -- 7) Function to get customer net position
+DROP FUNCTION IF EXISTS get_customer_net_position();
+
 CREATE OR REPLACE FUNCTION get_customer_net_position(customer_id_param uuid)
 RETURNS NUMERIC LANGUAGE plpgsql SECURITY DEFINER AS $$
 DECLARE

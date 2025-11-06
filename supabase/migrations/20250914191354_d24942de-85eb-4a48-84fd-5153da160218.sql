@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS public.app_users (
 ALTER TABLE public.app_users ENABLE ROW LEVEL SECURITY;
 
 -- Create policies for app_users
+DROP POLICY IF EXISTS "p_read_self" ON public.app_users;
 CREATE POLICY "p_read_self" ON public.app_users
   FOR SELECT USING (
     auth.uid() = auth_user_id OR 
@@ -26,6 +27,7 @@ CREATE POLICY "p_read_self" ON public.app_users
     )
   );
 
+DROP POLICY IF EXISTS "p_admin_manage" ON public.app_users;
 CREATE POLICY "p_admin_manage" ON public.app_users
   FOR ALL USING (
     EXISTS (
@@ -49,6 +51,7 @@ CREATE TABLE IF NOT EXISTS public.audit_logs (
 -- Enable RLS on audit_logs
 ALTER TABLE public.audit_logs ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "p_audit_read" ON public.audit_logs;
 CREATE POLICY "p_audit_read" ON public.audit_logs
   FOR SELECT USING (
     EXISTS (
@@ -63,6 +66,8 @@ CREATE POLICY "p_audit_read" ON public.audit_logs
 ALTER TABLE public.users ADD COLUMN IF NOT EXISTS auth_user_id UUID UNIQUE;
 
 -- Create function to get user role
+DROP FUNCTION IF EXISTS public.get_user_role();
+
 CREATE OR REPLACE FUNCTION public.get_user_role(user_id UUID)
 RETURNS TEXT
 LANGUAGE SQL
@@ -73,6 +78,8 @@ AS $$
 $$;
 
 -- Create function to check if user has role
+DROP FUNCTION IF EXISTS public.has_role();
+
 CREATE OR REPLACE FUNCTION public.has_role(_user_id UUID, _role TEXT)
 RETURNS BOOLEAN
 LANGUAGE SQL
@@ -90,6 +97,8 @@ AS $$
 $$;
 
 -- Create function to check if user has any of the roles
+DROP FUNCTION IF EXISTS public.has_any_role();
+
 CREATE OR REPLACE FUNCTION public.has_any_role(_user_id UUID, _roles TEXT[])
 RETURNS BOOLEAN
 LANGUAGE SQL
@@ -107,6 +116,11 @@ AS $$
 $$;
 
 -- Update trigger for updated_at
+-- Drop trigger first before dropping the function
+DROP TRIGGER IF EXISTS update_app_users_updated_at ON public.app_users;
+
+DROP FUNCTION IF EXISTS public.update_updated_at_column();
+
 CREATE OR REPLACE FUNCTION public.update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -115,6 +129,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS update_app_users_updated_at ON public.app_users;
 CREATE TRIGGER update_app_users_updated_at
     BEFORE UPDATE ON public.app_users
     FOR EACH ROW

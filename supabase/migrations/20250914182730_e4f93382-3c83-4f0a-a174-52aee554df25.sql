@@ -6,17 +6,20 @@ DROP POLICY IF EXISTS "Allow authenticated users to delete reminders" ON reminde
 DROP POLICY IF EXISTS "Allow authenticated users to insert reminders" ON reminders;
 
 -- Allow all users (including anonymous) to perform operations on reminders
+DROP POLICY IF EXISTS "Allow all users to update reminders" ON reminders;
 CREATE POLICY "Allow all users to update reminders" 
 ON reminders 
 FOR UPDATE 
 USING (true) 
 WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow all users to delete reminders" ON reminders;
 CREATE POLICY "Allow all users to delete reminders" 
 ON reminders 
 FOR DELETE 
 USING (true);
 
+DROP POLICY IF EXISTS "Allow all users to insert reminders" ON reminders;
 CREATE POLICY "Allow all users to insert reminders" 
 ON reminders 
 FOR INSERT 

@@ -1,4 +1,6 @@
 -- Add apply_payments_to_charges function for automatic FIFO payment application
+DROP FUNCTION IF EXISTS public.apply_payments_to_charges();
+
 CREATE OR REPLACE FUNCTION public.apply_payments_to_charges(p_rental_id uuid DEFAULT NULL)
 RETURNS void
 LANGUAGE plpgsql
@@ -73,6 +75,8 @@ END;
 $function$;
 
 -- Add trigger for automatic payment application on payment insert
+DROP FUNCTION IF EXISTS public.trigger_apply_payments_on_insert();
+
 CREATE OR REPLACE FUNCTION public.trigger_apply_payments_on_insert()
 RETURNS trigger
 LANGUAGE plpgsql
@@ -87,6 +91,8 @@ END;
 $function$;
 
 -- Add trigger for automatic payment application on charge insert
+DROP FUNCTION IF EXISTS public.trigger_apply_payments_on_charge();
+
 CREATE OR REPLACE FUNCTION public.trigger_apply_payments_on_charge()
 RETURNS trigger
 LANGUAGE plpgsql

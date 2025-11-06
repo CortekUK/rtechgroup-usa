@@ -1,10 +1,15 @@
 -- Fix security warnings by setting search_path for all functions
+-- Drop triggers first before dropping their functions
+DROP TRIGGER IF EXISTS rental_charges_trigger ON rentals;
+DROP TRIGGER IF EXISTS vehicle_acquisition_trigger ON vehicles;
+
+-- Now drop the functions
 DROP FUNCTION IF EXISTS pnl_post_acquisition(uuid);
 DROP FUNCTION IF EXISTS rental_create_charge(uuid, date, numeric);
 DROP FUNCTION IF EXISTS payment_apply_fifo(uuid);
 DROP FUNCTION IF EXISTS generate_rental_charges(uuid);
-DROP FUNCTION IF EXISTS trigger_generate_rental_charges();
-DROP FUNCTION IF EXISTS trigger_post_acquisition();
+DROP FUNCTION IF EXISTS trigger_generate_rental_charges() CASCADE;
+DROP FUNCTION IF EXISTS trigger_post_acquisition() CASCADE;
 
 -- Post acquisition costs to P&L (with security)
 CREATE OR REPLACE FUNCTION pnl_post_acquisition(v_id uuid)
@@ -21,6 +26,8 @@ AS $$
 $$;
 
 -- Create rental charge (with security)
+DROP FUNCTION IF EXISTS rental_create_charge();
+
 CREATE OR REPLACE FUNCTION rental_create_charge(r_id uuid, due date, amt numeric)
 RETURNS uuid 
 LANGUAGE plpgsql 
@@ -39,6 +46,8 @@ BEGIN
 END $$;
 
 -- Apply payment FIFO with P&L posting (with security)
+DROP FUNCTION IF EXISTS payment_apply_fifo();
+
 CREATE OR REPLACE FUNCTION payment_apply_fifo(p_id uuid)
 RETURNS void 
 LANGUAGE plpgsql 
@@ -58,6 +67,16 @@ BEGIN
   SELECT amount, rental_id, customer_id, vehicle_id, payment_date
   INTO v_amt, v_rental, v_customer, v_vehicle, v_date
   FROM payments WHERE id = p_id;
+
+  -- Exit if payment not found or required fields are NULL
+  IF v_amt IS NULL OR v_date IS NULL THEN
+    RETURN;
+  END IF;
+
+  -- Exit if payment not found or required fields are NULL
+  IF v_amt IS NULL OR v_date IS NULL THEN
+    RETURN;
+  END IF;
 
   v_left := v_amt;
 
@@ -97,6 +116,8 @@ BEGIN
 END $$;
 
 -- Generate monthly charges for rental (with security)
+DROP FUNCTION IF EXISTS generate_rental_charges();
+
 CREATE OR REPLACE FUNCTION generate_rental_charges(r_id uuid)
 RETURNS void 
 LANGUAGE plpgsql 
@@ -126,6 +147,11 @@ BEGIN
 END $$;
 
 -- Trigger to auto-generate charges on rental creation (with security)
+-- Drop trigger first before dropping the function
+DROP TRIGGER IF EXISTS rental_charges_trigger ON rentals;
+
+DROP FUNCTION IF EXISTS trigger_generate_rental_charges() CASCADE;
+
 CREATE OR REPLACE FUNCTION trigger_generate_rental_charges()
 RETURNS TRIGGER 
 LANGUAGE plpgsql 
@@ -138,6 +164,11 @@ BEGIN
 END $$;
 
 -- Trigger to post acquisition costs (with security)
+-- Drop trigger first before dropping the function
+DROP TRIGGER IF EXISTS rental_charges_trigger ON rentals;
+
+DROP FUNCTION IF EXISTS trigger_post_acquisition() CASCADE;
+
 CREATE OR REPLACE FUNCTION trigger_post_acquisition()
 RETURNS TRIGGER 
 LANGUAGE plpgsql 
@@ -154,11 +185,13 @@ BEGIN
 END $$;
 
 -- Recreate triggers
+DROP TRIGGER IF EXISTS rental_charges_trigger ON rentals;
 CREATE TRIGGER rental_charges_trigger
   AFTER INSERT ON rentals
   FOR EACH ROW
   EXECUTE FUNCTION trigger_generate_rental_charges();
 
+DROP TRIGGER IF EXISTS vehicle_acquisition_trigger ON vehicles;
 CREATE TRIGGER vehicle_acquisition_trigger
   AFTER INSERT OR UPDATE ON vehicles
   FOR EACH ROW

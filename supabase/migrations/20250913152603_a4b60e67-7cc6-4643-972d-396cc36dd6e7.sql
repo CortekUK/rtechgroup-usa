@@ -5,6 +5,8 @@ ADD CONSTRAINT ux_ledger_entries_payment_id UNIQUE (payment_id)
 WHERE (payment_id IS NOT NULL);
 
 -- Create atomic payment processing function
+DROP FUNCTION IF EXISTS public.process_payment_transaction();
+
 CREATE OR REPLACE FUNCTION public.process_payment_transaction(
   p_payment_id UUID,
   p_customer_id UUID,

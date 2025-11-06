@@ -54,27 +54,30 @@ ALTER TABLE public.vehicle_expenses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.vehicle_events ENABLE ROW LEVEL SECURITY;
 
 -- Create RLS policies for new tables
+DROP POLICY IF EXISTS "Allow all operations for app users on vehicle_files" ON public.vehicle_files;
 CREATE POLICY "Allow all operations for app users on vehicle_files" 
 ON public.vehicle_files FOR ALL 
 USING (true) 
 WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow all operations for app users on vehicle_expenses" ON public.vehicle_expenses;
 CREATE POLICY "Allow all operations for app users on vehicle_expenses" 
 ON public.vehicle_expenses FOR ALL 
 USING (true) 
 WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Allow all operations for app users on vehicle_events" ON public.vehicle_events;
 CREATE POLICY "Allow all operations for app users on vehicle_events" 
 ON public.vehicle_events FOR ALL 
 USING (true) 
 WITH CHECK (true);
 
 -- Create indexes for performance
-CREATE INDEX idx_vehicle_files_vehicle_id ON public.vehicle_files(vehicle_id);
-CREATE INDEX idx_vehicle_expenses_vehicle_id ON public.vehicle_expenses(vehicle_id);
-CREATE INDEX idx_vehicle_expenses_date ON public.vehicle_expenses(expense_date);
-CREATE INDEX idx_vehicle_events_vehicle_id ON public.vehicle_events(vehicle_id);
-CREATE INDEX idx_vehicle_events_date ON public.vehicle_events(event_date);
+CREATE INDEX IF NOT EXISTS idx_vehicle_files_vehicle_id ON public.vehicle_files(vehicle_id);
+CREATE INDEX IF NOT EXISTS idx_vehicle_expenses_vehicle_id ON public.vehicle_expenses(vehicle_id);
+CREATE INDEX IF NOT EXISTS idx_vehicle_expenses_date ON public.vehicle_expenses(expense_date);
+CREATE INDEX IF NOT EXISTS idx_vehicle_events_vehicle_id ON public.vehicle_events(vehicle_id);
+CREATE INDEX IF NOT EXISTS idx_vehicle_events_date ON public.vehicle_events(event_date);
 
 -- Add unique constraint on pnl_entries reference to prevent duplicates
 ALTER TABLE public.pnl_entries 
@@ -85,23 +88,32 @@ INSERT INTO storage.buckets (id, name, public)
 VALUES ('vehicle-files', 'vehicle-files', false);
 
 -- Create storage policies for vehicle files
+DROP POLICY IF EXISTS "Users can view vehicle files" ON storage.objects;
 CREATE POLICY "Users can view vehicle files" 
 ON storage.objects FOR SELECT 
 USING (bucket_id = 'vehicle-files');
 
+DROP POLICY IF EXISTS "Users can upload vehicle files" ON storage.objects;
 CREATE POLICY "Users can upload vehicle files" 
 ON storage.objects FOR INSERT 
 WITH CHECK (bucket_id = 'vehicle-files');
 
+DROP POLICY IF EXISTS "Users can update vehicle files" ON storage.objects;
 CREATE POLICY "Users can update vehicle files" 
 ON storage.objects FOR UPDATE 
 USING (bucket_id = 'vehicle-files');
 
+DROP POLICY IF EXISTS "Users can delete vehicle files" ON storage.objects;
 CREATE POLICY "Users can delete vehicle files" 
 ON storage.objects FOR DELETE 
 USING (bucket_id = 'vehicle-files');
 
 -- Create trigger function for vehicle expense P&L integration
+-- Drop trigger first before dropping the function
+DROP TRIGGER IF EXISTS vehicle_expense_pnl_trigger ON public.vehicle_expenses;
+
+DROP FUNCTION IF EXISTS handle_vehicle_expense_pnl();
+
 CREATE OR REPLACE FUNCTION handle_vehicle_expense_pnl()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -151,11 +163,14 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Create triggers for vehicle expense P&L integration
+DROP TRIGGER IF EXISTS vehicle_expense_pnl_trigger ON public.vehicle_expenses;
 CREATE TRIGGER vehicle_expense_pnl_trigger
     AFTER INSERT OR UPDATE OR DELETE ON public.vehicle_expenses
     FOR EACH ROW EXECUTE FUNCTION handle_vehicle_expense_pnl();
 
 -- Create function for vehicle event logging on file operations
+DROP FUNCTION IF EXISTS log_vehicle_file_event();
+
 CREATE OR REPLACE FUNCTION log_vehicle_file_event()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -184,6 +199,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Create trigger for vehicle file events
+DROP TRIGGER IF EXISTS vehicle_file_event_trigger ON public.vehicle_files;
 CREATE TRIGGER vehicle_file_event_trigger
     AFTER INSERT OR DELETE ON public.vehicle_files
     FOR EACH ROW EXECUTE FUNCTION log_vehicle_file_event();

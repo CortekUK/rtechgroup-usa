@@ -1,4 +1,6 @@
 -- Create function to get customer credit (unapplied payment amounts)
+DROP FUNCTION IF EXISTS get_customer_credit();
+
 CREATE OR REPLACE FUNCTION get_customer_credit(p_customer_id uuid)
 RETURNS numeric
 LANGUAGE plpgsql
@@ -20,6 +22,8 @@ END;
 $$;
 
 -- Create function to get rental credit (unapplied payment amounts for specific rental)
+DROP FUNCTION IF EXISTS get_rental_credit();
+
 CREATE OR REPLACE FUNCTION get_rental_credit(p_rental_id uuid)
 RETURNS numeric
 LANGUAGE plpgsql
@@ -41,6 +45,8 @@ END;
 $$;
 
 -- Create function to get payment remaining amount
+DROP FUNCTION IF EXISTS get_payment_remaining();
+
 CREATE OR REPLACE FUNCTION get_payment_remaining(p_payment_id uuid)
 RETURNS numeric
 LANGUAGE plpgsql

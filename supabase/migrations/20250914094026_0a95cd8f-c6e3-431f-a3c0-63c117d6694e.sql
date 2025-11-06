@@ -18,4 +18,5 @@ CREATE TABLE IF NOT EXISTS authority_payments (
 ALTER TABLE authority_payments ENABLE ROW LEVEL SECURITY;
 
 -- Create policy for authority_payments
+DROP POLICY IF EXISTS "Allow all operations for app users" ON authority_payments;
 CREATE POLICY "Allow all operations for app users" ON authority_payments FOR ALL USING (true) WITH CHECK (true);

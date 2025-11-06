@@ -15,6 +15,8 @@ DROP TRIGGER IF EXISTS trigger_apply_payment_on_insert ON payments;
 DROP TRIGGER IF EXISTS trigger_payments_auto_apply ON payments;
 
 -- Create new trigger to call centralized payment service
+DROP FUNCTION IF EXISTS trigger_call_payment_service();
+
 CREATE OR REPLACE FUNCTION trigger_call_payment_service()
 RETURNS TRIGGER AS $$
 BEGIN

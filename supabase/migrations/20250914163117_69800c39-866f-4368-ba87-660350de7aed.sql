@@ -77,16 +77,21 @@ DROP POLICY IF EXISTS "Allow all operations for app users on reminder_actions" O
 DROP POLICY IF EXISTS "Allow all operations for app users on reminder_emails" ON reminder_emails;
 
 -- RLS policies for admin access
+DROP POLICY IF EXISTS "Enable all operations for authenticated users - reminders" ON reminders;
 CREATE POLICY "Enable all operations for authenticated users - reminders" 
 ON reminders FOR ALL TO authenticated USING (true) WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Enable all operations for authenticated users - reminder_actions" ON reminder_actions;
 CREATE POLICY "Enable all operations for authenticated users - reminder_actions" 
 ON reminder_actions FOR ALL TO authenticated USING (true) WITH CHECK (true);
 
+DROP POLICY IF EXISTS "Enable all operations for authenticated users - reminder_emails" ON reminder_emails;
 CREATE POLICY "Enable all operations for authenticated users - reminder_emails" 
 ON reminder_emails FOR ALL TO authenticated USING (true) WITH CHECK (true);
 
 -- Function to update updated_at timestamp
+DROP FUNCTION IF EXISTS update_reminders_updated_at();
+
 CREATE OR REPLACE FUNCTION update_reminders_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN

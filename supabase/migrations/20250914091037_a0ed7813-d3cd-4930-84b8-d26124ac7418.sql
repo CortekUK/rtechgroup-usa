@@ -24,6 +24,8 @@ ON payment_applications (payment_id, charge_entry_id);
 -- Update the trigger to only charge Business liability fines immediately
 -- Customer liability fines will be recorded but not charged until admin action
 
+DROP FUNCTION IF EXISTS public.trigger_create_fine_charge();
+
 CREATE OR REPLACE FUNCTION public.trigger_create_fine_charge()
  RETURNS trigger
  LANGUAGE plpgsql

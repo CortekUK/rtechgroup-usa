@@ -5,12 +5,14 @@ DROP POLICY IF EXISTS "Allow authenticated users full access to reminders" ON pu
 DROP POLICY IF EXISTS "Enable all operations for authenticated users - reminders" ON public.reminders;
 
 -- Create new policy allowing anonymous users to read reminders
+DROP POLICY IF EXISTS "Allow all users to read reminders" ON public.reminders;
 CREATE POLICY "Allow all users to read reminders" 
 ON public.reminders 
 FOR SELECT 
 USING (true);
 
 -- Create policy for authenticated users to modify reminders
+DROP POLICY IF EXISTS "Allow authenticated users to modify reminders" ON public.reminders;
 CREATE POLICY "Allow authenticated users to modify reminders" 
 ON public.reminders 
 FOR INSERT, UPDATE, DELETE

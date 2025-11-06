@@ -1,4 +1,6 @@
 -- Fix payment_apply_fifo_v2 to avoid duplicate ledger entry creation
+DROP FUNCTION IF EXISTS public.payment_apply_fifo_v2();
+
 CREATE OR REPLACE FUNCTION public.payment_apply_fifo_v2(p_id uuid)
  RETURNS void
  LANGUAGE plpgsql

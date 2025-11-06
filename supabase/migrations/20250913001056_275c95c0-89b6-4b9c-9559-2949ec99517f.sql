@@ -4,6 +4,8 @@ DROP FUNCTION IF EXISTS public.fine_apply_payment_fifo(uuid);
 DROP TRIGGER IF EXISTS fine_create_charge_trigger ON public.fines;
 
 -- Update the trigger to use existing rental_create_charge function
+DROP FUNCTION IF EXISTS public.trigger_create_fine_charge();
+
 CREATE OR REPLACE FUNCTION public.trigger_create_fine_charge()
 RETURNS TRIGGER
 LANGUAGE plpgsql
@@ -26,11 +28,14 @@ BEGIN
 END $$;
 
 -- Recreate the trigger
+DROP TRIGGER IF EXISTS fine_create_charge_trigger ON public.fines;
 CREATE TRIGGER fine_create_charge_trigger
   AFTER INSERT ON public.fines
   FOR EACH ROW EXECUTE FUNCTION public.trigger_create_fine_charge();
 
 -- Update rental_create_charge to handle both rentals and fines
+DROP FUNCTION IF EXISTS public.rental_create_charge();
+
 CREATE OR REPLACE FUNCTION public.rental_create_charge(r_id uuid, due date, amt numeric)
 RETURNS uuid
 LANGUAGE plpgsql

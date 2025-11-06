@@ -1,5 +1,7 @@
 -- Fix security warnings: Add SET search_path to all functions
 
+DROP FUNCTION IF EXISTS pnl_post_acquisition();
+
 CREATE OR REPLACE FUNCTION pnl_post_acquisition(v_id uuid)
 RETURNS void 
 LANGUAGE sql 
@@ -12,6 +14,8 @@ AS $$
   WHERE v.id = v_id AND v.purchase_price IS NOT NULL AND v.acquisition_date IS NOT NULL
   ON CONFLICT DO NOTHING;
 $$;
+
+DROP FUNCTION IF EXISTS rental_create_charge();
 
 CREATE OR REPLACE FUNCTION rental_create_charge(r_id uuid, due date, amt numeric)
 RETURNS uuid 
@@ -29,6 +33,8 @@ BEGIN
   RETURNING id INTO cid;
   RETURN cid;
 END $$;
+
+DROP FUNCTION IF EXISTS payment_apply_fifo();
 
 CREATE OR REPLACE FUNCTION payment_apply_fifo(p_id uuid)
 RETURNS void 
@@ -49,6 +55,11 @@ BEGIN
   SELECT amount, rental_id, customer_id, vehicle_id, payment_date
   INTO v_amt, v_rental, v_customer, v_vehicle, v_date
   FROM payments WHERE id = p_id;
+
+  -- Exit if payment not found or required fields are NULL
+  IF v_amt IS NULL OR v_date IS NULL THEN
+    RETURN;
+  END IF;
 
   v_left := v_amt;
 
@@ -87,6 +98,8 @@ BEGIN
   END IF;
 END $$;
 
+DROP FUNCTION IF EXISTS generate_rental_charges();
+
 CREATE OR REPLACE FUNCTION generate_rental_charges(r_id uuid)
 RETURNS void 
 LANGUAGE plpgsql 
@@ -115,6 +128,8 @@ BEGIN
   END LOOP;
 END $$;
 
+DROP FUNCTION IF EXISTS trigger_generate_rental_charges() CASCADE;
+
 CREATE OR REPLACE FUNCTION trigger_generate_rental_charges()
 RETURNS TRIGGER 
 LANGUAGE plpgsql 
@@ -125,6 +140,8 @@ BEGIN
   PERFORM generate_rental_charges(NEW.id);
   RETURN NEW;
 END $$;
+
+DROP FUNCTION IF EXISTS trigger_post_acquisition() CASCADE;
 
 CREATE OR REPLACE FUNCTION trigger_post_acquisition()
 RETURNS TRIGGER 

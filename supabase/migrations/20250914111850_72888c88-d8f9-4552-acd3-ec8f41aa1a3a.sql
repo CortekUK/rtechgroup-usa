@@ -1,17 +1,29 @@
 -- Fix James Rodriguez and all customers - Clean up future charges and Initial Fee ledger issues
 -- 1. Remove all future rental charges (due_date > CURRENT_DATE)
-DELETE FROM ledger_entries 
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'ledger_entries') THEN
+    DELETE FROM ledger_entries 
 WHERE type = 'Charge' 
   AND category = 'Rental' 
   AND due_date > CURRENT_DATE;
+  END IF;
+END $$;
 
 -- 2. Remove Initial Fee ledger entries that create customer debt (these should only be P&L revenue)
-DELETE FROM ledger_entries 
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'ledger_entries') THEN
+    DELETE FROM ledger_entries 
 WHERE payment_id IN (
   SELECT id FROM payments WHERE payment_type = 'InitialFee'
 );
+  END IF;
+END $$;
 
 -- 3. Update the customer balance function to only include currently due charges
+DROP FUNCTION IF EXISTS public.get_customer_balance_with_status();
+
 CREATE OR REPLACE FUNCTION public.get_customer_balance_with_status(customer_id_param uuid)
  RETURNS TABLE(balance numeric, status text, total_charges numeric, total_payments numeric)
  LANGUAGE plpgsql

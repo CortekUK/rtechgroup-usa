@@ -94,10 +94,10 @@ CREATE TABLE pnl_entries (
 );
 
 -- Indexes for performance
-CREATE INDEX ix_ledger_rental_due ON ledger_entries(rental_id, type, due_date);
-CREATE INDEX ix_ledger_vehicle ON ledger_entries(vehicle_id, type, category);
-CREATE INDEX ix_payments_rental_date ON payments(rental_id, payment_date);
-CREATE INDEX ix_pnl_vehicle_date ON pnl_entries(vehicle_id, entry_date, side);
+CREATE INDEX IF NOT EXISTS ix_ledger_rental_due ON ledger_entries(rental_id, type, due_date);
+CREATE INDEX IF NOT EXISTS ix_ledger_vehicle ON ledger_entries(vehicle_id, type, category);
+CREATE INDEX IF NOT EXISTS ix_payments_rental_date ON payments(rental_id, payment_date);
+CREATE INDEX IF NOT EXISTS ix_pnl_vehicle_date ON pnl_entries(vehicle_id, entry_date, side);
 
 -- Enable RLS
 ALTER TABLE customers ENABLE ROW LEVEL SECURITY;
@@ -109,17 +109,26 @@ ALTER TABLE payment_applications ENABLE ROW LEVEL SECURITY;
 ALTER TABLE pnl_entries ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies (allow all for authenticated users for now)
+DROP POLICY IF EXISTS "Allow all operations for authenticated users" ON customers;
 CREATE POLICY "Allow all operations for authenticated users" ON customers FOR ALL USING (true);
+DROP POLICY IF EXISTS "Allow all operations for authenticated users" ON vehicles;
 CREATE POLICY "Allow all operations for authenticated users" ON vehicles FOR ALL USING (true);
+DROP POLICY IF EXISTS "Allow all operations for authenticated users" ON rentals;
 CREATE POLICY "Allow all operations for authenticated users" ON rentals FOR ALL USING (true);
+DROP POLICY IF EXISTS "Allow all operations for authenticated users" ON ledger_entries;
 CREATE POLICY "Allow all operations for authenticated users" ON ledger_entries FOR ALL USING (true);
+DROP POLICY IF EXISTS "Allow all operations for authenticated users" ON payments;
 CREATE POLICY "Allow all operations for authenticated users" ON payments FOR ALL USING (true);
+DROP POLICY IF EXISTS "Allow all operations for authenticated users" ON payment_applications;
 CREATE POLICY "Allow all operations for authenticated users" ON payment_applications FOR ALL USING (true);
+DROP POLICY IF EXISTS "Allow all operations for authenticated users" ON pnl_entries;
 CREATE POLICY "Allow all operations for authenticated users" ON pnl_entries FOR ALL USING (true);
 
 -- Business Logic Functions
 
 -- Post acquisition costs to P&L
+DROP FUNCTION IF EXISTS pnl_post_acquisition();
+
 CREATE OR REPLACE FUNCTION pnl_post_acquisition(v_id uuid)
 RETURNS void LANGUAGE sql AS $$
   INSERT INTO pnl_entries(vehicle_id, entry_date, side, category, amount, source_ref)
@@ -130,6 +139,8 @@ RETURNS void LANGUAGE sql AS $$
 $$;
 
 -- Create rental charge
+DROP FUNCTION IF EXISTS rental_create_charge();
+
 CREATE OR REPLACE FUNCTION rental_create_charge(r_id uuid, due date, amt numeric)
 RETURNS uuid LANGUAGE plpgsql AS $$
 DECLARE 
@@ -144,6 +155,8 @@ BEGIN
 END $$;
 
 -- Apply payment FIFO with P&L posting
+DROP FUNCTION IF EXISTS payment_apply_fifo();
+
 CREATE OR REPLACE FUNCTION payment_apply_fifo(p_id uuid)
 RETURNS void LANGUAGE plpgsql AS $$
 DECLARE
@@ -159,6 +172,11 @@ BEGIN
   SELECT amount, rental_id, customer_id, vehicle_id, payment_date
   INTO v_amt, v_rental, v_customer, v_vehicle, v_date
   FROM payments WHERE id = p_id;
+
+  -- Exit if payment not found or required fields are NULL
+  IF v_amt IS NULL OR v_date IS NULL THEN
+    RETURN;
+  END IF;
 
   v_left := v_amt;
 
@@ -198,6 +216,8 @@ BEGIN
 END $$;
 
 -- Generate monthly charges for rental
+DROP FUNCTION IF EXISTS generate_rental_charges();
+
 CREATE OR REPLACE FUNCTION generate_rental_charges(r_id uuid)
 RETURNS void LANGUAGE plpgsql AS $$
 DECLARE
@@ -223,6 +243,11 @@ BEGIN
 END $$;
 
 -- Trigger to auto-generate charges on rental creation
+-- Drop trigger first before dropping the function
+DROP TRIGGER IF EXISTS rental_charges_trigger ON rentals;
+
+DROP FUNCTION IF EXISTS trigger_generate_rental_charges() CASCADE;
+
 CREATE OR REPLACE FUNCTION trigger_generate_rental_charges()
 RETURNS TRIGGER LANGUAGE plpgsql AS $$
 BEGIN
@@ -230,12 +255,18 @@ BEGIN
   RETURN NEW;
 END $$;
 
+DROP TRIGGER IF EXISTS rental_charges_trigger ON rentals;
 CREATE TRIGGER rental_charges_trigger
   AFTER INSERT ON rentals
   FOR EACH ROW
   EXECUTE FUNCTION trigger_generate_rental_charges();
 
 -- Trigger to post acquisition costs
+-- Drop trigger first before dropping the function
+DROP TRIGGER IF EXISTS vehicle_acquisition_trigger ON vehicles;
+
+DROP FUNCTION IF EXISTS trigger_post_acquisition() CASCADE;
+
 CREATE OR REPLACE FUNCTION trigger_post_acquisition()
 RETURNS TRIGGER LANGUAGE plpgsql AS $$
 BEGIN
@@ -247,60 +278,9 @@ BEGIN
   RETURN NEW;
 END $$;
 
+DROP TRIGGER IF EXISTS vehicle_acquisition_trigger ON vehicles;
 CREATE TRIGGER vehicle_acquisition_trigger
   AFTER INSERT OR UPDATE ON vehicles
   FOR EACH ROW
   EXECUTE FUNCTION trigger_post_acquisition();
 
--- Demo Data
-INSERT INTO customers (type, name, email, phone) VALUES 
-('Individual', 'Neema Seifizadeh', 'neema@example.com', '+44 7700 900123'),
-('Individual', 'Amelia Singh', 'amelia@example.com', '+44 7700 900456');
-
-INSERT INTO vehicles (reg, make, model, colour, acquisition_type, purchase_price, acquisition_date) VALUES 
-('HV22 GZD', 'Ford', 'Transit', 'White', 'Purchase', 10000.00, CURRENT_DATE),
-('GJ21 NVR', 'Audi', 'A4', 'Black', 'Purchase', 18000.00, CURRENT_DATE);
-
--- Get IDs for demo rentals
-DO $$
-DECLARE
-  neema_id uuid;
-  amelia_id uuid;
-  transit_id uuid;
-  audi_id uuid;
-  rental1_id uuid;
-  rental2_id uuid;
-BEGIN
-  SELECT id INTO neema_id FROM customers WHERE name = 'Neema Seifizadeh';
-  SELECT id INTO amelia_id FROM customers WHERE name = 'Amelia Singh';
-  SELECT id INTO transit_id FROM vehicles WHERE reg = 'HV22 GZD';
-  SELECT id INTO audi_id FROM vehicles WHERE reg = 'GJ21 NVR';
-  
-  -- Neema's rental (starts today)
-  INSERT INTO rentals (customer_id, vehicle_id, start_date, end_date, monthly_amount)
-  VALUES (neema_id, transit_id, CURRENT_DATE, CURRENT_DATE + INTERVAL '12 months', 1000.00)
-  RETURNING id INTO rental1_id;
-  
-  -- Amelia's rental (starts in 7 days)
-  INSERT INTO rentals (customer_id, vehicle_id, start_date, end_date, monthly_amount)
-  VALUES (amelia_id, audi_id, CURRENT_DATE + INTERVAL '7 days', CURRENT_DATE + INTERVAL '19 months', 400.00)
-  RETURNING id INTO rental2_id;
-  
-  -- Initial fee payments
-  INSERT INTO payments (customer_id, rental_id, vehicle_id, amount, payment_date, payment_type)
-  VALUES (neema_id, rental1_id, transit_id, 250.00, CURRENT_DATE, 'InitialFee');
-  
-  INSERT INTO payments (customer_id, rental_id, vehicle_id, amount, payment_date, payment_type)
-  VALUES (amelia_id, rental2_id, audi_id, 150.00, CURRENT_DATE, 'InitialFee');
-  
-  -- Post initial fees to P&L immediately
-  INSERT INTO pnl_entries (vehicle_id, entry_date, side, category, amount, source_ref)
-  VALUES (transit_id, CURRENT_DATE, 'Revenue', 'Fees', 250.00, 'InitialFee');
-  
-  INSERT INTO pnl_entries (vehicle_id, entry_date, side, category, amount, source_ref)
-  VALUES (audi_id, CURRENT_DATE, 'Revenue', 'Fees', 150.00, 'InitialFee');
-  
-  -- Neema's early rental payment (credit until due)
-  INSERT INTO payments (customer_id, rental_id, vehicle_id, amount, payment_date, payment_type)
-  VALUES (neema_id, rental1_id, transit_id, 1000.00, CURRENT_DATE, 'Rental');
-END $$;

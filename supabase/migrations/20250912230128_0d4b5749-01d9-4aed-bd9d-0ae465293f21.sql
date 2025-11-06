@@ -19,6 +19,7 @@ CREATE TABLE public.reminder_events (
 ALTER TABLE public.reminder_events ENABLE ROW LEVEL SECURITY;
 
 -- Create policy for authenticated users
+DROP POLICY IF EXISTS "Allow all operations for authenticated users" ON public.reminder_events;
 CREATE POLICY "Allow all operations for authenticated users" 
 ON public.reminder_events 
 FOR ALL 
@@ -39,6 +40,6 @@ setting_value = EXCLUDED.setting_value,
 updated_at = now();
 
 -- Create index for performance
-CREATE INDEX idx_reminder_events_status ON public.reminder_events(status);
-CREATE INDEX idx_reminder_events_customer ON public.reminder_events(customer_id);
-CREATE INDEX idx_reminder_events_due_type ON public.reminder_events(reminder_type, created_at);
+CREATE INDEX IF NOT EXISTS idx_reminder_events_status ON public.reminder_events(status);
+CREATE INDEX IF NOT EXISTS idx_reminder_events_customer ON public.reminder_events(customer_id);
+CREATE INDEX IF NOT EXISTS idx_reminder_events_due_type ON public.reminder_events(reminder_type, created_at);

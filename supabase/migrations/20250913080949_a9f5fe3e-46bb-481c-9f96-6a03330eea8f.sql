@@ -15,14 +15,20 @@ CREATE TABLE IF NOT EXISTS public.plates (
 ALTER TABLE public.plates ENABLE ROW LEVEL SECURITY;
 
 -- Create RLS policy
+DROP POLICY IF EXISTS "Allow all operations for authenticated users" ON public.plates;
 CREATE POLICY "Allow all operations for authenticated users" ON public.plates
 FOR ALL USING (true);
 
 -- Add indexes for performance
-CREATE INDEX idx_plates_plate_number ON public.plates(plate_number);
-CREATE INDEX idx_plates_assigned_vehicle ON public.plates(assigned_vehicle_id);
+CREATE INDEX IF NOT EXISTS idx_plates_plate_number ON public.plates(plate_number);
+CREATE INDEX IF NOT EXISTS idx_plates_assigned_vehicle ON public.plates(assigned_vehicle_id);
+
+-- Drop trigger first before dropping the function
+DROP TRIGGER IF EXISTS update_plates_updated_at ON public.plates;
 
 -- Create function to update timestamps
+DROP FUNCTION IF EXISTS public.update_plates_updated_at();
+
 CREATE OR REPLACE FUNCTION public.update_plates_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -32,6 +38,7 @@ END;
 $$ LANGUAGE plpgsql SET search_path = public;
 
 -- Create trigger for automatic timestamp updates
+DROP TRIGGER IF EXISTS update_plates_updated_at ON public.plates;
 CREATE TRIGGER update_plates_updated_at
 BEFORE UPDATE ON public.plates
 FOR EACH ROW

@@ -1,4 +1,6 @@
 -- Update P&L category mapping for vehicle expenses
+DROP FUNCTION IF EXISTS public.handle_vehicle_expense_pnl();
+
 CREATE OR REPLACE FUNCTION public.handle_vehicle_expense_pnl()
  RETURNS trigger
  LANGUAGE plpgsql

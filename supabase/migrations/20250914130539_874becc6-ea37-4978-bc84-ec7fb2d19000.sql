@@ -19,18 +19,22 @@ VALUES ('customer-documents', 'customer-documents', false)
 ON CONFLICT (id) DO NOTHING;
 
 -- Create storage policies for customer-documents bucket
+DROP POLICY IF EXISTS "Authenticated users can view customer documents" ON storage.objects;
 CREATE POLICY "Authenticated users can view customer documents" 
 ON storage.objects FOR SELECT 
 USING (bucket_id = 'customer-documents' AND auth.role() = 'authenticated');
 
+DROP POLICY IF EXISTS "Authenticated users can upload customer documents" ON storage.objects;
 CREATE POLICY "Authenticated users can upload customer documents" 
 ON storage.objects FOR INSERT 
 WITH CHECK (bucket_id = 'customer-documents' AND auth.role() = 'authenticated');
 
+DROP POLICY IF EXISTS "Authenticated users can update customer documents" ON storage.objects;
 CREATE POLICY "Authenticated users can update customer documents" 
 ON storage.objects FOR UPDATE 
 USING (bucket_id = 'customer-documents' AND auth.role() = 'authenticated');
 
+DROP POLICY IF EXISTS "Authenticated users can delete customer documents" ON storage.objects;
 CREATE POLICY "Authenticated users can delete customer documents" 
 ON storage.objects FOR DELETE 
 USING (bucket_id = 'customer-documents' AND auth.role() = 'authenticated');
@@ -67,6 +71,11 @@ FROM insurance_policies
 ON CONFLICT DO NOTHING;
 
 -- Add updated_at trigger for customer_documents
+-- Drop trigger first before dropping the function
+DROP TRIGGER IF EXISTS update_customer_documents_updated_at ON customer_documents;
+
+DROP FUNCTION IF EXISTS update_customer_documents_updated_at();
+
 CREATE OR REPLACE FUNCTION update_customer_documents_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -75,6 +84,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS update_customer_documents_updated_at ON customer_documents;
 CREATE TRIGGER update_customer_documents_updated_at
   BEFORE UPDATE ON customer_documents
   FOR EACH ROW

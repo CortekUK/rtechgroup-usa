@@ -16,6 +16,8 @@ INSERT INTO ledger_entries (
 ) ON CONFLICT DO NOTHING;
 
 -- Phase 5: Update customer balance calculation to handle credits properly  
+DROP FUNCTION IF EXISTS get_customer_balance_with_status();
+
 CREATE OR REPLACE FUNCTION get_customer_balance_with_status(customer_id_param uuid)
 RETURNS TABLE(
   balance numeric,

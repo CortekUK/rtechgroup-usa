@@ -1,4 +1,6 @@
 -- Fix the process_payment_transaction function to use correct ON CONFLICT syntax for partial unique index
+DROP FUNCTION IF EXISTS public.process_payment_transaction();
+
 CREATE OR REPLACE FUNCTION public.process_payment_transaction(
   p_payment_id uuid, 
   p_customer_id uuid, 

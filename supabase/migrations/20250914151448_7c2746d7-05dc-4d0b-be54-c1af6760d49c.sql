@@ -10,6 +10,8 @@ ADD CONSTRAINT unique_policy_number_per_customer
 UNIQUE (customer_id, policy_number);
 
 -- Create function to update docs_count when documents are added/removed
+DROP FUNCTION IF EXISTS public.update_insurance_docs_count();
+
 CREATE OR REPLACE FUNCTION public.update_insurance_docs_count()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -43,6 +45,8 @@ SET docs_count = (
 );
 
 -- Function to check for overlapping active policies
+DROP FUNCTION IF EXISTS public.check_policy_overlap();
+
 CREATE OR REPLACE FUNCTION public.check_policy_overlap(
   p_customer_id UUID,
   p_vehicle_id UUID,
@@ -76,6 +80,8 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Function to recalculate insurance policy status based on dates
+DROP FUNCTION IF EXISTS public.recalculate_insurance_status();
+
 CREATE OR REPLACE FUNCTION public.recalculate_insurance_status()
 RETURNS TABLE(
   updated_policies INTEGER,

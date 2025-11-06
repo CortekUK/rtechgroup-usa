@@ -1,4 +1,4 @@
-project_id = "wrogevjpvhvputrjhvvg"
+project_id = "ypjthmlmbqggqvzoolnk"
 
 [functions.admin-create-user]
 verify_jwt = true
@@ -46,4 +46,19 @@ verify_jwt = false
 verify_jwt = false
 
 [functions.settings]
+verify_jwt = false
+
+[functions.docusign-webhook]
+verify_jwt = false
+
+[functions.create-docusign-envelope]
+verify_jwt = true
+
+[functions.process-reminders]
+verify_jwt = false
+
+[functions.cleanup-test-data]
+verify_jwt = false
+
+[functions.auth-rate-limit]
 verify_jwt = false

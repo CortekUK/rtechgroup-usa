@@ -1,4 +1,6 @@
 -- Fix the repair function to handle unique constraints properly
+DROP FUNCTION IF EXISTS repair_missing_ledger_entries();
+
 CREATE OR REPLACE FUNCTION repair_missing_ledger_entries()
 RETURNS TEXT AS $$
 DECLARE

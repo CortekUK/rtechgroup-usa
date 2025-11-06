@@ -116,6 +116,8 @@ ON storage.objects FOR DELETE
 USING (bucket_id = 'vehicle-files');
 
 -- Create trigger functions
+DROP FUNCTION IF EXISTS handle_vehicle_expense_pnl();
+
 CREATE OR REPLACE FUNCTION handle_vehicle_expense_pnl()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -171,6 +173,8 @@ CREATE TRIGGER vehicle_expense_pnl_trigger
     FOR EACH ROW EXECUTE FUNCTION handle_vehicle_expense_pnl();
 
 -- Create function for vehicle event logging on file operations
+DROP FUNCTION IF EXISTS log_vehicle_file_event();
+
 CREATE OR REPLACE FUNCTION log_vehicle_file_event()
 RETURNS TRIGGER AS $$
 BEGIN

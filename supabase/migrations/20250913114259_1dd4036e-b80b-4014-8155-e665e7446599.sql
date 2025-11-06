@@ -10,6 +10,8 @@ SET remaining_amount = 0,
 WHERE remaining_amount IS NULL;
 
 -- Create improved payment auto-apply function
+DROP FUNCTION IF EXISTS payment_apply_fifo_v2();
+
 CREATE OR REPLACE FUNCTION payment_apply_fifo_v2(p_id uuid)
 RETURNS void
 LANGUAGE plpgsql
@@ -29,6 +31,11 @@ BEGIN
   SELECT amount, rental_id, customer_id, vehicle_id, payment_date, is_early
     INTO v_amt, v_rental, v_customer, v_vehicle, v_pay_date, v_is_early
   FROM payments WHERE id = p_id;
+
+  -- Exit if payment not found or required fields are NULL
+  IF v_amt IS NULL OR v_date IS NULL THEN
+    RETURN;
+  END IF;
 
   -- Skip if no customer
   IF v_customer IS NULL THEN
@@ -104,6 +111,8 @@ END;
 $function$;
 
 -- Create backfill function for maintenance
+DROP FUNCTION IF EXISTS reapply_all_payments_v2();
+
 CREATE OR REPLACE FUNCTION reapply_all_payments_v2()
 RETURNS TABLE(payments_processed integer, customers_affected integer, total_credit_applied numeric)
 LANGUAGE plpgsql
@@ -146,6 +155,8 @@ END;
 $function$;
 
 -- Replace the old payment_apply_fifo function to use the new version
+DROP FUNCTION IF EXISTS payment_apply_fifo();
+
 CREATE OR REPLACE FUNCTION payment_apply_fifo(p_id uuid)
 RETURNS void
 LANGUAGE plpgsql

@@ -6,11 +6,13 @@ DROP POLICY IF EXISTS "Enable all operations for authenticated users - reminders
 
 -- Create new policies that allow anonymous access for SELECT operations
 -- and authenticated users for all operations
+DROP POLICY IF EXISTS "Allow anonymous users to read reminders" ON public.reminders;
 CREATE POLICY "Allow anonymous users to read reminders" 
 ON public.reminders 
 FOR SELECT 
 USING (true);
 
+DROP POLICY IF EXISTS "Allow authenticated users full access to reminders" ON public.reminders;
 CREATE POLICY "Allow authenticated users full access to reminders" 
 ON public.reminders 
 FOR ALL 

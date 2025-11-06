@@ -6,6 +6,7 @@ DROP POLICY "Enable all operations for all users - reminders delete" ON reminder
 DROP POLICY "Enable all operations for all users - reminders insert" ON reminders;
 
 -- Create comprehensive policies for all operations
+DROP POLICY IF EXISTS "Allow all operations on reminders" ON reminders;
 CREATE POLICY "Allow all operations on reminders" 
 ON reminders 
 FOR ALL

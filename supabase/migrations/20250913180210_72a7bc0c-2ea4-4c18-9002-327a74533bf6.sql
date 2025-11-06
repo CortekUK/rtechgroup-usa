@@ -1,29 +1,74 @@
 -- Remove all transactional data for clean testing (correct order for foreign keys)
 
 -- Delete all payment applications first
-DELETE FROM payment_applications;
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'payment_applications') THEN
+    DELETE FROM payment_applications;
+  END IF;
+END $$;
 
 -- Delete all reminder events and logs
-DELETE FROM reminder_events;
-DELETE FROM reminder_logs;
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'reminder_events') THEN
+    DELETE FROM reminder_events;
+  END IF;
+END $$;
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'reminder_logs') THEN
+    DELETE FROM reminder_logs;
+  END IF;
+END $$;
 
 -- Delete all ledger entries (references payments)
-DELETE FROM ledger_entries;
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'ledger_entries') THEN
+    DELETE FROM ledger_entries;
+  END IF;
+END $$;
 
 -- Delete all P&L entries  
-DELETE FROM pnl_entries;
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'pnl_entries') THEN
+    DELETE FROM pnl_entries;
+  END IF;
+END $$;
 
 -- Delete all fine files (references fines)
-DELETE FROM fine_files;
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'fine_files') THEN
+    DELETE FROM fine_files;
+  END IF;
+END $$;
 
 -- Delete all fines
-DELETE FROM fines;
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'fines') THEN
+    DELETE FROM fines;
+  END IF;
+END $$;
 
 -- Delete all rentals
-DELETE FROM rentals;
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'rentals') THEN
+    DELETE FROM rentals;
+  END IF;
+END $$;
 
 -- Now delete payments (after ledger entries)
-DELETE FROM payments;
+DO $$
+BEGIN
+  IF EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'payments') THEN
+    DELETE FROM payments;
+  END IF;
+END $$;
 
 -- Reset vehicle status to Available
 UPDATE vehicles SET status = 'Available';

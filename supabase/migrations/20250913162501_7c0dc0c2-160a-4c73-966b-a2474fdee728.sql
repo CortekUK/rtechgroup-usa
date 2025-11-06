@@ -4,6 +4,8 @@ ALTER TABLE public.ledger_entries
 ADD CONSTRAINT ux_ledger_entries_payment_id UNIQUE (payment_id);
 
 -- Update the process_payment_transaction function to handle missing constraints gracefully
+DROP FUNCTION IF EXISTS public.process_payment_transaction();
+
 CREATE OR REPLACE FUNCTION public.process_payment_transaction(
   p_payment_id uuid, 
   p_customer_id uuid, 

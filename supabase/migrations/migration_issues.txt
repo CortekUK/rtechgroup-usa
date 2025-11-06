@@ -1,0 +1,470 @@
+MIGRATION FILES NEEDING DROP FUNCTION IF EXISTS STATEMENTS
+======================================================================
+
+Total problematic files: 125
+Total missing DROP statements: 214
+
+1. 20250912222233_d24850d7-1595-465d-af18-70199926799a.sql
+   MISSING: DROP FUNCTION IF EXISTS public.create_rental_charges;
+
+2. 20250912222256_ff54963c-2150-4e6c-a05b-86e702dc4162.sql
+   MISSING: DROP FUNCTION IF EXISTS public.create_rental_charges;
+
+3. 20250912223701_6ac925dc-49c9-4053-9e4d-85c6a0d70e55.sql
+   MISSING: DROP FUNCTION IF EXISTS pnl_post_acquisition;
+   MISSING: DROP FUNCTION IF EXISTS rental_create_charge;
+   MISSING: DROP FUNCTION IF EXISTS payment_apply_fifo;
+   MISSING: DROP FUNCTION IF EXISTS generate_rental_charges;
+   MISSING: DROP FUNCTION IF EXISTS trigger_generate_rental_charges;
+   MISSING: DROP FUNCTION IF EXISTS trigger_post_acquisition;
+
+4. 20250912223811_bf019537-20e5-4d78-bc2f-726884164f46.sql
+   MISSING: DROP FUNCTION IF EXISTS pnl_post_acquisition;
+   MISSING: DROP FUNCTION IF EXISTS rental_create_charge;
+   MISSING: DROP FUNCTION IF EXISTS payment_apply_fifo;
+   MISSING: DROP FUNCTION IF EXISTS generate_rental_charges;
+   MISSING: DROP FUNCTION IF EXISTS trigger_generate_rental_charges;
+   MISSING: DROP FUNCTION IF EXISTS trigger_post_acquisition;
+
+5. 20250912223839_969dace6-fae7-45b9-bb51-eae7e9ef048c.sql
+   MISSING: DROP FUNCTION IF EXISTS pnl_post_acquisition;
+   MISSING: DROP FUNCTION IF EXISTS rental_create_charge;
+   MISSING: DROP FUNCTION IF EXISTS payment_apply_fifo;
+   MISSING: DROP FUNCTION IF EXISTS generate_rental_charges;
+   MISSING: DROP FUNCTION IF EXISTS trigger_generate_rental_charges;
+   MISSING: DROP FUNCTION IF EXISTS trigger_post_acquisition;
+
+6. 20250912223907_2fe7feb3-5066-4e74-aae0-bb272b44aced.sql
+   MISSING: DROP FUNCTION IF EXISTS pnl_post_acquisition;
+   MISSING: DROP FUNCTION IF EXISTS rental_create_charge;
+   MISSING: DROP FUNCTION IF EXISTS payment_apply_fifo;
+   MISSING: DROP FUNCTION IF EXISTS generate_rental_charges;
+   MISSING: DROP FUNCTION IF EXISTS trigger_generate_rental_charges;
+   MISSING: DROP FUNCTION IF EXISTS trigger_post_acquisition;
+
+7. 20250912225557_88c2e34e-f3e7-4ce4-a22b-0febe5b2cbdc.sql
+   MISSING: DROP FUNCTION IF EXISTS public.get_pending_charges_for_reminders;
+
+8. 20250912230825_c8786c4a-9731-4822-a495-2bc6e46aa59b.sql
+   MISSING: DROP FUNCTION IF EXISTS get_customer_statement;
+
+9. 20250912230911_f98de561-f762-47df-95b8-b93c0c164c8d.sql
+   MISSING: DROP FUNCTION IF EXISTS get_customer_statement;
+
+10. 20250913000112_4b0158a1-4baa-452e-8c82-d4928f84b56e.sql
+   MISSING: DROP FUNCTION IF EXISTS public.fine_create_charge;
+   MISSING: DROP FUNCTION IF EXISTS public.fine_apply_payment_fifo;
+   MISSING: DROP FUNCTION IF EXISTS public.fine_void_charge;
+   MISSING: DROP FUNCTION IF EXISTS public.trigger_create_fine_charge;
+
+11. 20250913000151_0497dc37-65ec-4d19-b23a-75694ca3f24b.sql
+   MISSING: DROP FUNCTION IF EXISTS public.fine_create_charge;
+   MISSING: DROP FUNCTION IF EXISTS public.fine_apply_payment_fifo;
+   MISSING: DROP FUNCTION IF EXISTS public.fine_void_charge;
+   MISSING: DROP FUNCTION IF EXISTS public.trigger_create_fine_charge;
+
+12. 20250913000513_8f3d16c9-5b41-49b8-9231-3a19cdd0dd30.sql
+   MISSING: DROP FUNCTION IF EXISTS public.payment_apply_fifo;
+
+13. 20250913000620_14c15278-ba6a-4603-9a11-daca190e5abe.sql
+   MISSING: DROP FUNCTION IF EXISTS public.payment_apply_fifo;
+
+14. 20250913001056_275c95c0-89b6-4b9c-9559-2949ec99517f.sql
+   MISSING: DROP FUNCTION IF EXISTS public.trigger_create_fine_charge;
+   MISSING: DROP FUNCTION IF EXISTS public.rental_create_charge;
+
+15. 20250913001213_a72322e0-64d7-4f21-ac56-d21b84424ce9.sql
+   MISSING: DROP FUNCTION IF EXISTS public.fine_void_charge;
+
+16. 20250913001233_df955209-4296-45ac-b576-d6d20dbd888f.sql
+   MISSING: DROP FUNCTION IF EXISTS public.fine_void_charge;
+
+17. 20250913002315_1842b7ea-954e-4614-b91f-a19735b53221.sql
+   MISSING: DROP FUNCTION IF EXISTS public.generate_daily_reminders;
+
+18. 20250913002343_cea6e697-b5a5-4be3-8ee5-866fc1ef805a.sql
+   MISSING: DROP FUNCTION IF EXISTS public.generate_daily_reminders;
+
+19. 20250913080949_a9f5fe3e-46bb-481c-9f96-6a03330eea8f.sql
+   MISSING: DROP FUNCTION IF EXISTS public.update_plates_updated_at;
+
+20. 20250913081114_c2678949-736f-43c5-b738-84322e28845d.sql
+   MISSING: DROP FUNCTION IF EXISTS public.update_plates_updated_at;
+
+21. 20250913081129_791fcccf-c485-450a-a2c3-a777c0b0aa79.sql
+   MISSING: DROP FUNCTION IF EXISTS public.update_plates_updated_at;
+
+22. 20250913084710_151fb1ba-4820-436d-8940-23efaf5adabc.sql
+   MISSING: DROP FUNCTION IF EXISTS public.trigger_post_acquisition;
+
+23. 20250913103341_127dd38e-ebcd-4289-a089-96268292935b.sql
+   MISSING: DROP FUNCTION IF EXISTS get_customer_credit;
+   MISSING: DROP FUNCTION IF EXISTS get_rental_credit;
+   MISSING: DROP FUNCTION IF EXISTS get_payment_remaining;
+
+24. 20250913103401_53e78321-b0d3-4555-8fa2-43dc838af88f.sql
+   MISSING: DROP FUNCTION IF EXISTS get_rental_credit;
+   MISSING: DROP FUNCTION IF EXISTS get_payment_remaining;
+
+25. 20250913105556_e95a0e6b-7402-4c24-9c1f-af72c81c98e6.sql
+   MISSING: DROP FUNCTION IF EXISTS backfill_rental_charges_full;
+   MISSING: DROP FUNCTION IF EXISTS attach_payments_to_rentals;
+   MISSING: DROP FUNCTION IF EXISTS payment_apply_fifo;
+   MISSING: DROP FUNCTION IF EXISTS reapply_all_payments;
+   MISSING: DROP FUNCTION IF EXISTS get_customer_net_position;
+
+26. 20250913105627_784cb44b-6cec-490f-aafa-d5e1f7ecf5d4.sql
+   MISSING: DROP FUNCTION IF EXISTS backfill_rental_charges_full;
+   MISSING: DROP FUNCTION IF EXISTS attach_payments_to_rentals;
+   MISSING: DROP FUNCTION IF EXISTS payment_apply_fifo;
+   MISSING: DROP FUNCTION IF EXISTS reapply_all_payments;
+   MISSING: DROP FUNCTION IF EXISTS get_customer_net_position;
+
+27. 20250913105700_f54689b5-06ba-4639-b9ab-a4bea2a3f9a6.sql
+   MISSING: DROP FUNCTION IF EXISTS backfill_rental_charges_full;
+   MISSING: DROP FUNCTION IF EXISTS attach_payments_to_rentals;
+   MISSING: DROP FUNCTION IF EXISTS payment_apply_fifo;
+   MISSING: DROP FUNCTION IF EXISTS reapply_all_payments;
+   MISSING: DROP FUNCTION IF EXISTS get_customer_net_position;
+
+28. 20250913105724_6b633234-e9cd-4539-be82-96e82d9f96d7.sql
+   MISSING: DROP FUNCTION IF EXISTS backfill_rental_charges_full;
+   MISSING: DROP FUNCTION IF EXISTS attach_payments_to_rentals;
+   MISSING: DROP FUNCTION IF EXISTS payment_apply_fifo;
+   MISSING: DROP FUNCTION IF EXISTS reapply_all_payments;
+   MISSING: DROP FUNCTION IF EXISTS get_customer_net_position;
+
+29. 20250913105755_6e5427ed-ad79-4822-8b23-20cd18a3fc2b.sql
+   MISSING: DROP FUNCTION IF EXISTS payment_apply_fifo;
+   MISSING: DROP FUNCTION IF EXISTS get_customer_net_position;
+
+30. 20250913110148_f99d14a3-f969-4da7-81ad-962f22d826b3.sql
+   MISSING: DROP FUNCTION IF EXISTS backfill_rental_charges_full;
+   MISSING: DROP FUNCTION IF EXISTS attach_payments_to_rentals;
+   MISSING: DROP FUNCTION IF EXISTS reapply_all_payments;
+
+31. 20250913114259_1dd4036e-b80b-4014-8155-e665e7446599.sql
+   MISSING: DROP FUNCTION IF EXISTS payment_apply_fifo_v2;
+   MISSING: DROP FUNCTION IF EXISTS reapply_all_payments_v2;
+   MISSING: DROP FUNCTION IF EXISTS payment_apply_fifo;
+
+32. 20250913115818_589348db-f20b-4523-a33f-9d28865861a6.sql
+   MISSING: DROP FUNCTION IF EXISTS auto_apply_customer_credit;
+
+33. 20250913120321_a8b6e2f9-c942-4d11-a5fe-16d3df7b95bf.sql
+   MISSING: DROP FUNCTION IF EXISTS public.payment_apply_fifo_v2;
+   MISSING: DROP FUNCTION IF EXISTS public.reapply_all_payments_v2;
+   MISSING: DROP FUNCTION IF EXISTS auto_apply_customer_credit;
+   MISSING: DROP FUNCTION IF EXISTS public.payment_auto_apply_due_credit;
+
+34. 20250913120336_6230e0c3-6277-4ef6-987c-90c59ffc3122.sql
+   MISSING: DROP FUNCTION IF EXISTS public.payment_apply_fifo_v2;
+   MISSING: DROP FUNCTION IF EXISTS public.reapply_all_payments_v2;
+   MISSING: DROP FUNCTION IF EXISTS auto_apply_customer_credit;
+   MISSING: DROP FUNCTION IF EXISTS public.payment_auto_apply_due_credit;
+
+35. 20250913121531_fbbd95ef-d7fa-4df6-8d88-867294db52bc.sql
+   MISSING: DROP FUNCTION IF EXISTS public.apply_payments_to_charges;
+   MISSING: DROP FUNCTION IF EXISTS public.trigger_apply_payments_on_insert;
+   MISSING: DROP FUNCTION IF EXISTS public.trigger_apply_payments_on_charge;
+
+36. 20250913124929_dc918822-c25c-4487-9098-ae20c5dc6f84.sql
+   MISSING: DROP FUNCTION IF EXISTS public.generate_next_rental_charge;
+   MISSING: DROP FUNCTION IF EXISTS public.apply_payment_fully;
+   MISSING: DROP FUNCTION IF EXISTS public.trigger_apply_payment_on_insert;
+
+37. 20250913125130_26fe564c-7002-41d5-adb2-2c3ab5941ba5.sql
+   MISSING: DROP FUNCTION IF EXISTS public.generate_next_rental_charge;
+   MISSING: DROP FUNCTION IF EXISTS public.apply_payment_fully;
+   MISSING: DROP FUNCTION IF EXISTS public.trigger_apply_payment_on_insert;
+
+38. 20250913131544_0c8c36e2-4416-4209-b21e-aea398da4b2d.sql
+   MISSING: DROP FUNCTION IF EXISTS public.apply_payment_fully;
+
+39. 20250913131708_fb0b5e33-9753-4e07-9dc6-5311e1d3fbcb.sql
+   MISSING: DROP FUNCTION IF EXISTS public.apply_payment_fully;
+
+40. 20250913131729_16b45c72-a369-488c-a16f-6dfdf14fe0e1.sql
+   MISSING: DROP FUNCTION IF EXISTS public.apply_payment_fully;
+
+41. 20250913132435_ebe6ee47-ab7c-4312-a3f1-17ab23f0389c.sql
+   MISSING: DROP FUNCTION IF EXISTS public.apply_payment_fully;
+
+42. 20250913133429_1ecc6a7e-484b-4dd3-9409-53f82ba4a203.sql
+   MISSING: DROP FUNCTION IF EXISTS public.apply_payment_fully;
+
+43. 20250913134635_867a307f-ca4f-4c64-8eb1-1a79649a6141.sql
+   MISSING: DROP FUNCTION IF EXISTS public.apply_payment_fully;
+
+44. 20250913134655_68d39e5d-dce5-4082-b35b-cff8de7b5fd9.sql
+   MISSING: DROP FUNCTION IF EXISTS public.apply_payment_fully;
+
+45. 20250913150616_0ced727c-8979-4599-b028-0c3f6c84283e.sql
+   MISSING: DROP FUNCTION IF EXISTS trigger_call_payment_service;
+
+46. 20250913152603_a4b60e67-7cc6-4643-972d-396cc36dd6e7.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+47. 20250913152629_2c4e5bb3-5dab-4016-acb8-c8b240565669.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+48. 20250913152652_7df2e0bd-0b7d-43eb-8a42-9f9ac85bdf95.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+49. 20250913152717_f0395211-7781-43c7-9107-ea1ef1d90ac2.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+50. 20250913152849_c87936bc-8b83-4a81-af49-6ae93a1ca8ef.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+51. 20250913152914_65714992-0f79-4818-b242-f23496ebec7f.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+52. 20250913152943_e76b87d8-5437-4b03-9bca-531af4de2908.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+53. 20250913153138_e099146b-3fe0-403d-b1fb-6f25da10edee.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+54. 20250913154406_6d69f61d-93a6-4325-8571-70f54b1e81d0.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+55. 20250913155008_3676eb03-e5e1-44d7-a232-9b2210ec785d.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+56. 20250913155140_89b42ce3-33da-44e7-a300-a36227c55bba.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+57. 20250913155828_4880fd31-7ce2-45f1-9e73-84788d0bd108.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+58. 20250913160002_c2a2398a-10fc-4991-ad5f-3a97fc8dc01e.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+59. 20250913161025_592ee6e4-4572-4dd7-9e84-1e254be9de81.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+60. 20250913161400_a7cee572-9865-4f5d-9cd7-1c308a962174.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+61. 20250913161754_ce4214a2-9a01-4020-812c-3742f6b22c28.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+62. 20250913161833_0abd61b8-9788-43fd-a36d-51eb0150ee6d.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+63. 20250913161903_6a2a0d3a-0fa3-4ed9-b3e7-a71897fd1781.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+64. 20250913161922_97e363c5-2641-4c8b-a7c4-c077e8639e49.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+65. 20250913161941_139ff461-13cd-477d-8871-8f0f526d3796.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+66. 20250913162001_2d979e71-6822-4ca1-a4fa-ea605e8bb329.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+67. 20250913162501_7c0dc0c2-160a-4c73-966b-a2474fdee728.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+68. 20250913162534_df42a3d7-1af5-4a7d-bec9-a2da9a3c2d57.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+69. 20250913162550_d96bf004-67cf-467f-b71d-da87d0eff5c9.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+70. 20250913162915_d6d8979e-d173-411c-9589-e70e2c88f2a4.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+71. 20250913163223_72b1e729-ab92-430f-90ef-176c15328a22.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+72. 20250913165638_cd77160f-a40a-4398-8a85-4392beed1aa7.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+73. 20250913165656_4656910d-d680-425e-ad9b-ae16f9db9826.sql
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+74. 20250913170254_489de0dd-31dd-4b82-a38d-e9b7b50e0452.sql
+   MISSING: DROP FUNCTION IF EXISTS public.generate_next_rental_charge;
+
+75. 20250913170844_a2807320-6663-4d05-bc2f-5ff40f5a04af.sql
+   MISSING: DROP FUNCTION IF EXISTS public.payment_apply_fifo_v2;
+
+76. 20250913171501_cbc3a9bf-823e-40fa-83a7-46fcf7bbbf76.sql
+   MISSING: DROP FUNCTION IF EXISTS public.payment_apply_fifo_v2;
+
+77. 20250913194416_f1a027de-f755-418d-a852-7908583d8136.sql
+   MISSING: DROP FUNCTION IF EXISTS repair_missing_ledger_entries;
+   MISSING: DROP FUNCTION IF EXISTS check_payment_data_integrity;
+
+78. 20250913194516_044e89f8-2fed-48df-97db-814fe5168933.sql
+   MISSING: DROP FUNCTION IF EXISTS repair_missing_ledger_entries;
+
+79. 20250913194730_ea38ebad-597b-4339-a2a9-3220a78a4cef.sql
+   MISSING: DROP FUNCTION IF EXISTS check_payment_data_integrity;
+
+80. 20250913194859_42c6ed67-0d11-453d-ab6d-9ede9a078694.sql
+   MISSING: DROP FUNCTION IF EXISTS get_customer_balance_with_status;
+
+81. 20250913205411_669f06ba-2ab9-4ad6-b5a1-e18bf790a276.sql
+   MISSING: DROP FUNCTION IF EXISTS public.get_customer_balance_with_status;
+
+82. 20250913210235_1ddc3822-0571-4966-abbb-18efdfc41f2d.sql
+   MISSING: DROP FUNCTION IF EXISTS public.get_customer_balance_with_status;
+
+83. 20250913210251_00665611-fc58-43cd-b629-5abca9632727.sql
+   MISSING: DROP FUNCTION IF EXISTS public.get_customer_balance_with_status;
+
+84. 20250913210616_4ffc3db5-01fa-409c-b457-f726edcfa468.sql
+   MISSING: DROP FUNCTION IF EXISTS public.get_customer_balance_with_status;
+
+85. 20250913210631_5351ef22-024f-44bb-aa18-d40579502c14.sql
+   MISSING: DROP FUNCTION IF EXISTS public.get_customer_balance_with_status;
+
+86. 20250913212241_82d2dd1a-6d3c-4ca8-bd48-a3925a33fde0.sql
+   MISSING: DROP FUNCTION IF EXISTS public.trigger_create_fine_charge;
+
+87. 20250913213602_4195fb92-b172-4151-830b-b2359c2f0266.sql
+   MISSING: DROP FUNCTION IF EXISTS public.trigger_create_fine_charge;
+
+88. 20250913213614_40006cfb-2956-415e-a3a0-cbd31f84c824.sql
+   MISSING: DROP FUNCTION IF EXISTS public.trigger_create_fine_charge;
+
+89. 20250914091037_a0ed7813-d3cd-4930-84b8-d26124ac7418.sql
+   MISSING: DROP FUNCTION IF EXISTS public.trigger_create_fine_charge;
+
+90. 20250914093112_bcace404-07b0-49b4-bce2-9a67464ddeba.sql
+   MISSING: DROP FUNCTION IF EXISTS public.get_customer_balance_with_status;
+
+91. 20250914093121_07adb061-3805-448b-bf61-1566a4b2f519.sql
+   MISSING: DROP FUNCTION IF EXISTS public.get_customer_balance_with_status;
+
+92. 20250914093401_5d80c2b3-b1ff-4d8c-9cf5-0ca4813179db.sql
+   MISSING: DROP FUNCTION IF EXISTS public.get_customer_balance_with_status;
+
+93. 20250914093411_22eca187-cc12-46b1-987c-32bc883f5e30.sql
+   MISSING: DROP FUNCTION IF EXISTS public.get_customer_balance_with_status;
+
+94. 20250914101338_9e7cc8a8-7ec2-415b-8cf4-e0dd25dbe139.sql
+   MISSING: DROP FUNCTION IF EXISTS public.get_customer_balance_with_status;
+
+95. 20250914101348_bc2722e0-5b2d-41cb-95cd-88c92cb9629b.sql
+   MISSING: DROP FUNCTION IF EXISTS public.get_customer_balance_with_status;
+
+96. 20250914103229_a7f725ed-8ebc-49ac-b37f-98f86a6f2ac8.sql
+   MISSING: DROP FUNCTION IF EXISTS public.get_customer_balance_with_status;
+
+97. 20250914103240_9502c62d-2640-476b-9af7-d804d0275836.sql
+   MISSING: DROP FUNCTION IF EXISTS public.get_customer_balance_with_status;
+
+98. 20250914111102_498c259f-2713-4367-a8f6-5ffc7ec2ee0a.sql
+   MISSING: DROP FUNCTION IF EXISTS public.backfill_rental_charges_first_month_only;
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+99. 20250914111131_384f7759-a9d6-43cf-bfbd-2afd8c069f37.sql
+   MISSING: DROP FUNCTION IF EXISTS public.backfill_rental_charges_first_month_only;
+   MISSING: DROP FUNCTION IF EXISTS public.process_payment_transaction;
+
+100. 20250914111850_72888c88-d8f9-4552-acd3-ec8f41aa1a3a.sql
+   MISSING: DROP FUNCTION IF EXISTS public.get_customer_balance_with_status;
+
+101. 20250914121658_3520aa11-8214-4ed6-bf8d-3af40381d615.sql
+   MISSING: DROP FUNCTION IF EXISTS public.pnl_post_acquisition;
+   MISSING: DROP FUNCTION IF EXISTS public.trigger_post_acquisition;
+   MISSING: DROP FUNCTION IF EXISTS public.has_upfront_finance_entry;
+
+102. 20250914121851_bc0fc28e-1926-4ecc-9338-bf455f5ee761.sql
+   MISSING: DROP FUNCTION IF EXISTS public.pnl_post_acquisition;
+   MISSING: DROP FUNCTION IF EXISTS public.trigger_post_acquisition;
+   MISSING: DROP FUNCTION IF EXISTS public.has_upfront_finance_entry;
+
+103. 20250914123626_ab8da39c-569c-423e-82b9-b4138e3776d2.sql
+   MISSING: DROP FUNCTION IF EXISTS public.update_insurance_updated_at;
+
+104. 20250914130539_874becc6-ea37-4978-bc84-ec7fb2d19000.sql
+   MISSING: DROP FUNCTION IF EXISTS update_customer_documents_updated_at;
+
+105. 20250914130653_bf6bbb79-6cd9-4a9f-9e84-703b4fccb44b.sql
+   MISSING: DROP FUNCTION IF EXISTS update_customer_documents_updated_at;
+
+106. 20250914132403_e6971a34-e4b7-4805-b0e8-0e07cb4409d4.sql
+   MISSING: DROP FUNCTION IF EXISTS public.update_vehicle_last_service;
+   MISSING: DROP FUNCTION IF EXISTS public.upsert_service_pnl_entry;
+   MISSING: DROP FUNCTION IF EXISTS public.trigger_update_vehicle_last_service;
+
+107. 20250914132442_d113655b-3143-46f7-9386-203772676d6c.sql
+   MISSING: DROP FUNCTION IF EXISTS public.update_vehicle_last_service;
+   MISSING: DROP FUNCTION IF EXISTS public.upsert_service_pnl_entry;
+   MISSING: DROP FUNCTION IF EXISTS public.trigger_update_vehicle_last_service;
+
+108. 20250914133453_a1a840a3-57bc-4bf7-a708-79b88f174534.sql
+   MISSING: DROP FUNCTION IF EXISTS upsert_plate_pnl_entry;
+   MISSING: DROP FUNCTION IF EXISTS trigger_update_plate_pnl;
+
+109. 20250914134742_0bf2f867-84a1-4894-9f12-2c0ea5145317.sql
+   MISSING: DROP FUNCTION IF EXISTS handle_vehicle_expense_pnl;
+   MISSING: DROP FUNCTION IF EXISTS log_vehicle_file_event;
+
+110. 20250914134810_3c00285f-541c-4bed-94a7-1c758c09129a.sql
+   MISSING: DROP FUNCTION IF EXISTS handle_vehicle_expense_pnl;
+   MISSING: DROP FUNCTION IF EXISTS log_vehicle_file_event;
+
+111. 20250914134920_ebed6d2b-10f2-48d6-9a14-64687793b593.sql
+   MISSING: DROP FUNCTION IF EXISTS handle_vehicle_expense_pnl;
+   MISSING: DROP FUNCTION IF EXISTS log_vehicle_file_event;
+
+112. 20250914135616_0a909d1d-2450-4eb8-ab51-03ce06e68ac6.sql
+   MISSING: DROP FUNCTION IF EXISTS public.calculate_vehicle_book_cost;
+   MISSING: DROP FUNCTION IF EXISTS public.dispose_vehicle;
+   MISSING: DROP FUNCTION IF EXISTS public.undo_vehicle_disposal;
+
+113. 20250914140931_32581df8-44fe-439e-8660-98742133dee6.sql
+   MISSING: DROP FUNCTION IF EXISTS public.handle_vehicle_expense_pnl;
+
+114. 20250914140957_762b10f5-e60c-4e31-b98e-bfdc5df5351c.sql
+   MISSING: DROP FUNCTION IF EXISTS public.handle_vehicle_expense_pnl;
+
+115. 20250914141158_3b016fe7-60b8-40e0-9d69-8d6fd5c7cc85.sql
+   MISSING: DROP FUNCTION IF EXISTS public.handle_vehicle_expense_pnl;
+
+116. 20250914143419_1a1c1a70-4924-4bc0-b3b6-b763b62ecded.sql
+   MISSING: DROP FUNCTION IF EXISTS generate_rental_number;
+
+117. 20250914151448_7c2746d7-05dc-4d0b-be54-c1af6760d49c.sql
+   MISSING: DROP FUNCTION IF EXISTS public.update_insurance_docs_count;
+   MISSING: DROP FUNCTION IF EXISTS public.check_policy_overlap;
+   MISSING: DROP FUNCTION IF EXISTS public.recalculate_insurance_status;
+
+118. 20250914151519_393e69be-ce7d-41c4-87ff-82f056a2ce8c.sql
+   MISSING: DROP FUNCTION IF EXISTS public.update_insurance_docs_count;
+   MISSING: DROP FUNCTION IF EXISTS public.check_policy_overlap;
+   MISSING: DROP FUNCTION IF EXISTS public.recalculate_insurance_status;
+
+119. 20250914163018_c01972df-a925-412c-b216-e43762cbaf29.sql
+   MISSING: DROP FUNCTION IF EXISTS update_reminders_updated_at;
+
+120. 20250914163117_69800c39-866f-4368-ba87-660350de7aed.sql
+   MISSING: DROP FUNCTION IF EXISTS update_reminders_updated_at;
+
+121. 20250914170434_67ce74a7-f9e1-47c3-a111-6c0f13dc28aa.sql
+   MISSING: DROP FUNCTION IF EXISTS public.set_updated_at;
+   MISSING: DROP FUNCTION IF EXISTS public.audit_settings_changes;
+
+122. 20250914191354_d24942de-85eb-4a48-84fd-5153da160218.sql
+   MISSING: DROP FUNCTION IF EXISTS public.get_user_role;
+   MISSING: DROP FUNCTION IF EXISTS public.has_role;
+   MISSING: DROP FUNCTION IF EXISTS public.has_any_role;
+   MISSING: DROP FUNCTION IF EXISTS public.update_updated_at_column;
+
+123. 20250914194419_efd789f5-bc63-4c07-920d-6d82a1558df2.sql
+   MISSING: DROP FUNCTION IF EXISTS public.get_current_user_role;
+   MISSING: DROP FUNCTION IF EXISTS public.is_current_user_admin;
+
+124. 20250915104653_ccd10fae-212d-4f7d-9049-520e5e7e3a79.sql
+   MISSING: DROP FUNCTION IF EXISTS backfill_payment_rental_ids;
+
+125. 20251030000001_create_pipeline_leads.sql
+   MISSING: DROP FUNCTION IF EXISTS update_leads_updated_at;
+

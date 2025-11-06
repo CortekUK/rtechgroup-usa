@@ -25,11 +25,13 @@ ALTER TABLE public.reminder_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.reminder_settings ENABLE ROW LEVEL SECURITY;
 
 -- Create policies
+DROP POLICY IF EXISTS "Allow all operations for authenticated users" ON public.reminder_logs;
 CREATE POLICY "Allow all operations for authenticated users" 
 ON public.reminder_logs 
 FOR ALL 
 USING (true);
 
+DROP POLICY IF EXISTS "Allow all operations for authenticated users" ON public.reminder_settings;
 CREATE POLICY "Allow all operations for authenticated users" 
 ON public.reminder_settings 
 FOR ALL 
@@ -60,6 +62,8 @@ INSERT INTO public.reminder_settings (setting_key, setting_value) VALUES
 }'::jsonb);
 
 -- Create function to get pending charges for reminders
+DROP FUNCTION IF EXISTS public.get_pending_charges_for_reminders();
+
 CREATE OR REPLACE FUNCTION public.get_pending_charges_for_reminders()
 RETURNS TABLE (
   charge_id uuid,

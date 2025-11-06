@@ -1,4 +1,6 @@
 -- Fix function search path issues
+DROP FUNCTION IF EXISTS public.fine_create_charge();
+
 CREATE OR REPLACE FUNCTION public.fine_create_charge(f_id UUID)
 RETURNS UUID
 LANGUAGE plpgsql
@@ -44,6 +46,8 @@ BEGIN
   
   RETURN cid;
 END $$;
+
+DROP FUNCTION IF EXISTS public.fine_apply_payment_fifo();
 
 CREATE OR REPLACE FUNCTION public.fine_apply_payment_fifo(p_id UUID)
 RETURNS VOID
@@ -114,6 +118,8 @@ BEGIN
   END IF;
 END $$;
 
+DROP FUNCTION IF EXISTS public.fine_void_charge();
+
 CREATE OR REPLACE FUNCTION public.fine_void_charge(f_id UUID)
 RETURNS VOID
 LANGUAGE plpgsql
@@ -167,6 +173,8 @@ BEGIN
   -- Update fine status
   UPDATE fines SET status = 'Appeal Successful' WHERE id = f_id;
 END $$;
+
+DROP FUNCTION IF EXISTS public.trigger_create_fine_charge();
 
 CREATE OR REPLACE FUNCTION public.trigger_create_fine_charge()
 RETURNS TRIGGER

@@ -7,18 +7,22 @@ ALTER TABLE public.vehicles
 ADD COLUMN photo_url TEXT;
 
 -- Create RLS policies for vehicle photos bucket
+DROP POLICY IF EXISTS "Anyone can view vehicle photos" ON storage.objects;
 CREATE POLICY "Anyone can view vehicle photos" 
 ON storage.objects FOR SELECT 
 USING (bucket_id = 'vehicle-photos');
 
+DROP POLICY IF EXISTS "Anyone can upload vehicle photos" ON storage.objects;
 CREATE POLICY "Anyone can upload vehicle photos" 
 ON storage.objects FOR INSERT 
 WITH CHECK (bucket_id = 'vehicle-photos');
 
+DROP POLICY IF EXISTS "Anyone can update vehicle photos" ON storage.objects;
 CREATE POLICY "Anyone can update vehicle photos" 
 ON storage.objects FOR UPDATE 
 USING (bucket_id = 'vehicle-photos');
 
+DROP POLICY IF EXISTS "Anyone can delete vehicle photos" ON storage.objects;
 CREATE POLICY "Anyone can delete vehicle photos" 
 ON storage.objects FOR DELETE 
 USING (bucket_id = 'vehicle-photos');

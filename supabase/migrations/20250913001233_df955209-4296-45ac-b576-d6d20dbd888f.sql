@@ -1,4 +1,6 @@
 -- Add fine_void_charge function for appeal handling
+DROP FUNCTION IF EXISTS public.fine_void_charge();
+
 CREATE OR REPLACE FUNCTION public.fine_void_charge(f_id UUID)
 RETURNS VOID
 LANGUAGE plpgsql

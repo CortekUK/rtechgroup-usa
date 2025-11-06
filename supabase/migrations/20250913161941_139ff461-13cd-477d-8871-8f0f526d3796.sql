@@ -17,6 +17,8 @@ BEGIN
 END $$;
 
 -- Update the process_payment_transaction function to use correct constraint names
+DROP FUNCTION IF EXISTS public.process_payment_transaction();
+
 CREATE OR REPLACE FUNCTION public.process_payment_transaction(
   p_payment_id uuid, 
   p_customer_id uuid, 

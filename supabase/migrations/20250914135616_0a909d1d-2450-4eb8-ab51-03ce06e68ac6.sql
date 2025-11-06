@@ -12,6 +12,8 @@ ON public.pnl_entries(reference)
 WHERE reference IS NOT NULL;
 
 -- Create function to calculate book cost for disposal
+DROP FUNCTION IF EXISTS public.calculate_vehicle_book_cost();
+
 CREATE OR REPLACE FUNCTION public.calculate_vehicle_book_cost(p_vehicle_id uuid)
 RETURNS numeric
 LANGUAGE plpgsql
@@ -47,6 +49,8 @@ END;
 $$;
 
 -- Create function to process vehicle disposal
+DROP FUNCTION IF EXISTS public.dispose_vehicle();
+
 CREATE OR REPLACE FUNCTION public.dispose_vehicle(
   p_vehicle_id uuid,
   p_disposal_date date,
@@ -128,6 +132,8 @@ END;
 $$;
 
 -- Create function to undo vehicle disposal
+DROP FUNCTION IF EXISTS public.undo_vehicle_disposal();
+
 CREATE OR REPLACE FUNCTION public.undo_vehicle_disposal(p_vehicle_id uuid)
 RETURNS jsonb
 LANGUAGE plpgsql

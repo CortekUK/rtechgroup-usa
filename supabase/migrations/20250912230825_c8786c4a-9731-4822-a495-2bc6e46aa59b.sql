@@ -19,8 +19,7 @@ SELECT
   p.amount,
   COALESCE(pa_summary.applied_amount, 0) as applied_amount,
   p.amount - COALESCE(pa_summary.applied_amount, 0) as unapplied_amount,
-  COALESCE(pa_summary.allocations_json, '[]'::jsonb) as allocations_json,
-  p.created_at
+  COALESCE(pa_summary.allocations_json, '[]'::jsonb) as allocations_json
 FROM payments p
 LEFT JOIN customers c ON c.id = p.customer_id
 LEFT JOIN vehicles v ON v.id = p.vehicle_id
@@ -137,6 +136,8 @@ GROUP BY c.id, c.name
 HAVING SUM(le.remaining_amount) > 0;
 
 -- 6. Customer Statement Function
+DROP FUNCTION IF EXISTS get_customer_statement();
+
 CREATE OR REPLACE FUNCTION get_customer_statement(
   p_customer_id UUID,
   p_from_date DATE,

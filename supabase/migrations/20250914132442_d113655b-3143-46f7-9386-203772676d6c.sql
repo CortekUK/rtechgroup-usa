@@ -1,4 +1,6 @@
 -- Fix search path security for the newly created functions
+DROP FUNCTION IF EXISTS public.update_vehicle_last_service();
+
 CREATE OR REPLACE FUNCTION public.update_vehicle_last_service(p_vehicle_id uuid)
 RETURNS void
 LANGUAGE plpgsql
@@ -33,6 +35,8 @@ END;
 $$;
 
 -- Fix search path security for upsert service P&L function
+DROP FUNCTION IF EXISTS public.upsert_service_pnl_entry();
+
 CREATE OR REPLACE FUNCTION public.upsert_service_pnl_entry(
   p_service_record_id uuid,
   p_cost numeric,
@@ -70,6 +74,8 @@ END;
 $$;
 
 -- Fix search path security for trigger function
+DROP FUNCTION IF EXISTS public.trigger_update_vehicle_last_service();
+
 CREATE OR REPLACE FUNCTION public.trigger_update_vehicle_last_service()
 RETURNS trigger
 LANGUAGE plpgsql

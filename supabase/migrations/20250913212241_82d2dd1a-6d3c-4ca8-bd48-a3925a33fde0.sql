@@ -1,6 +1,11 @@
 -- Check and fix fine charge creation workflow
 
 -- Ensure fine charges are properly created with the correct category
+-- Drop trigger first before dropping the function
+DROP TRIGGER IF EXISTS fine_create_charge_trigger ON public.fines;
+
+DROP FUNCTION IF EXISTS public.trigger_create_fine_charge();
+
 CREATE OR REPLACE FUNCTION public.trigger_create_fine_charge()
 RETURNS TRIGGER
 LANGUAGE plpgsql

@@ -1,4 +1,7 @@
 -- Update the get_pending_charges_for_reminders function to include fine charges
+-- Drop the old function first to avoid return type conflicts
+DROP FUNCTION IF EXISTS public.get_pending_charges_for_reminders();
+
 CREATE OR REPLACE FUNCTION public.get_pending_charges_for_reminders()
 RETURNS TABLE(
   charge_id uuid, 

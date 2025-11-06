@@ -14,18 +14,22 @@ VALUES ('company-logos', 'company-logos', true)
 ON CONFLICT (id) DO NOTHING;
 
 -- Storage policies for company logos
+DROP POLICY IF EXISTS "Company logos are publicly accessible" ON storage.objects;
 CREATE POLICY "Company logos are publicly accessible" 
 ON storage.objects FOR SELECT 
 USING (bucket_id = 'company-logos');
 
+DROP POLICY IF EXISTS "Authenticated users can upload company logos" ON storage.objects;
 CREATE POLICY "Authenticated users can upload company logos" 
 ON storage.objects FOR INSERT 
 WITH CHECK (bucket_id = 'company-logos' AND auth.role() = 'authenticated');
 
+DROP POLICY IF EXISTS "Authenticated users can update company logos" ON storage.objects;
 CREATE POLICY "Authenticated users can update company logos" 
 ON storage.objects FOR UPDATE 
 USING (bucket_id = 'company-logos' AND auth.role() = 'authenticated');
 
+DROP POLICY IF EXISTS "Authenticated users can delete company logos" ON storage.objects;
 CREATE POLICY "Authenticated users can delete company logos" 
 ON storage.objects FOR DELETE 
 USING (bucket_id = 'company-logos' AND auth.role() = 'authenticated');

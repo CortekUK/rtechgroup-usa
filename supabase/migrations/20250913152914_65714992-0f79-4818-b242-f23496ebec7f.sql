@@ -1,10 +1,12 @@
 -- Create partial unique index on ledger_entries(payment_id) where payment_id IS NOT NULL
 -- This allows proper upsert behavior for payment ledger entries
-CREATE UNIQUE INDEX ux_ledger_entries_payment_id 
+CREATE UNIQUE INDEX IF NOT EXISTS ux_ledger_entries_payment_id 
 ON public.ledger_entries (payment_id) 
 WHERE payment_id IS NOT NULL;
 
 -- Create atomic payment processing function
+DROP FUNCTION IF EXISTS public.process_payment_transaction();
+
 CREATE OR REPLACE FUNCTION public.process_payment_transaction(
   p_payment_id UUID,
   p_customer_id UUID,

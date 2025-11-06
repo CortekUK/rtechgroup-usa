@@ -1,4 +1,6 @@
 -- Backfill functions for existing data
+DROP FUNCTION IF EXISTS backfill_rental_charges_full();
+
 CREATE OR REPLACE FUNCTION backfill_rental_charges_full()
 RETURNS void LANGUAGE plpgsql AS $$
 DECLARE
@@ -32,6 +34,8 @@ END;
 $$;
 
 -- Backfill rental_id on existing payments by matching (customer_id, vehicle_id, payment_date) to an active rental
+DROP FUNCTION IF EXISTS attach_payments_to_rentals();
+
 CREATE OR REPLACE FUNCTION attach_payments_to_rentals()
 RETURNS void LANGUAGE plpgsql AS $$
 BEGIN
@@ -47,6 +51,8 @@ END;
 $$;
 
 -- Re-apply all payments chronologically (soft rebuild)
+DROP FUNCTION IF EXISTS reapply_all_payments();
+
 CREATE OR REPLACE FUNCTION reapply_all_payments()
 RETURNS void LANGUAGE plpgsql AS $$
 DECLARE

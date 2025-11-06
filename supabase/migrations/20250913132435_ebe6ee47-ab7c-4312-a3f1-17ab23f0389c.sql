@@ -45,6 +45,8 @@ ALTER TABLE public.pnl_entries
     UNIQUE (payment_id, category);
 
 -- 8. Update apply_payment_fully function to use correct constraint and category
+DROP FUNCTION IF EXISTS public.apply_payment_fully();
+
 CREATE OR REPLACE FUNCTION public.apply_payment_fully(p_payment_id uuid)
 RETURNS void
 LANGUAGE plpgsql

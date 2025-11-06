@@ -39,18 +39,22 @@ VALUES ('insurance-docs', 'insurance-docs', false)
 ON CONFLICT (id) DO NOTHING;
 
 -- Create storage policies for insurance documents
+DROP POLICY IF EXISTS "Allow authenticated users to view insurance documents" ON storage.objects;
 CREATE POLICY "Allow authenticated users to view insurance documents"
 ON storage.objects FOR SELECT
 USING (bucket_id = 'insurance-docs' AND auth.role() = 'authenticated');
 
+DROP POLICY IF EXISTS "Allow authenticated users to upload insurance documents" ON storage.objects;
 CREATE POLICY "Allow authenticated users to upload insurance documents"
 ON storage.objects FOR INSERT
 WITH CHECK (bucket_id = 'insurance-docs' AND auth.role() = 'authenticated');
 
+DROP POLICY IF EXISTS "Allow authenticated users to update insurance documents" ON storage.objects;
 CREATE POLICY "Allow authenticated users to update insurance documents"
 ON storage.objects FOR UPDATE
 USING (bucket_id = 'insurance-docs' AND auth.role() = 'authenticated');
 
+DROP POLICY IF EXISTS "Allow authenticated users to delete insurance documents" ON storage.objects;
 CREATE POLICY "Allow authenticated users to delete insurance documents"
 ON storage.objects FOR DELETE
 USING (bucket_id = 'insurance-docs' AND auth.role() = 'authenticated');
@@ -60,6 +64,7 @@ ALTER TABLE public.insurance_policies ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.insurance_documents ENABLE ROW LEVEL SECURITY;
 
 -- Create RLS policies for insurance_policies
+DROP POLICY IF EXISTS "Allow all operations for app users on insurance_policies" ON public.insurance_policies;
 CREATE POLICY "Allow all operations for app users on insurance_policies"
 ON public.insurance_policies FOR ALL
 TO authenticated
@@ -67,6 +72,7 @@ USING (true)
 WITH CHECK (true);
 
 -- Create RLS policies for insurance_documents
+DROP POLICY IF EXISTS "Allow all operations for app users on insurance_documents" ON public.insurance_documents;
 CREATE POLICY "Allow all operations for app users on insurance_documents"
 ON public.insurance_documents FOR ALL
 TO authenticated
@@ -74,6 +80,11 @@ USING (true)
 WITH CHECK (true);
 
 -- Create trigger to update updated_at timestamp
+-- Drop trigger first before dropping the function
+DROP TRIGGER IF EXISTS update_insurance_policies_updated_at ON public.insurance_policies;
+
+DROP FUNCTION IF EXISTS public.update_insurance_updated_at();
+
 CREATE OR REPLACE FUNCTION public.update_insurance_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -82,6 +93,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS update_insurance_policies_updated_at ON public.insurance_policies;
 CREATE TRIGGER update_insurance_policies_updated_at
   BEFORE UPDATE ON public.insurance_policies
   FOR EACH ROW

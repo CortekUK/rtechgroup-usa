@@ -1,5 +1,7 @@
 -- Fix timestamp usage in payment functions
 -- Update payment_apply_fifo_v2 to use payment_date instead of created_at
+DROP FUNCTION IF EXISTS public.payment_apply_fifo_v2();
+
 CREATE OR REPLACE FUNCTION public.payment_apply_fifo_v2(p_id uuid)
 RETURNS void
 LANGUAGE plpgsql
@@ -94,6 +96,8 @@ END;
 $function$;
 
 -- Update reapply_all_payments_v2 to order by payment_date instead of created_at
+DROP FUNCTION IF EXISTS public.reapply_all_payments_v2();
+
 CREATE OR REPLACE FUNCTION public.reapply_all_payments_v2()
 RETURNS TABLE(payments_processed integer, customers_affected integer, total_credit_applied numeric)
 LANGUAGE plpgsql
@@ -136,6 +140,8 @@ END;
 $function$;
 
 -- Update auto_apply_customer_credit to use payment_date order instead of created_at
+DROP FUNCTION IF EXISTS auto_apply_customer_credit();
+
 CREATE OR REPLACE FUNCTION auto_apply_customer_credit()
 RETURNS TRIGGER AS $$
 DECLARE
@@ -161,6 +167,8 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Update payment_auto_apply_due_credit to check payment_date instead of created_at
+DROP FUNCTION IF EXISTS public.payment_auto_apply_due_credit();
+
 CREATE OR REPLACE FUNCTION public.payment_auto_apply_due_credit()
 RETURNS void
 LANGUAGE plpgsql

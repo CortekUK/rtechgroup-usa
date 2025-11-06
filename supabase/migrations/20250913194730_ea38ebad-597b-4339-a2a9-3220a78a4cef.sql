@@ -1,4 +1,6 @@
 -- Create the integrity check function first
+DROP FUNCTION IF EXISTS check_payment_data_integrity();
+
 CREATE OR REPLACE FUNCTION check_payment_data_integrity()
 RETURNS TABLE(
   issue_type TEXT,

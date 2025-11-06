@@ -19,9 +19,10 @@ CREATE TABLE IF NOT EXISTS public.reminder_events (
 ALTER TABLE public.reminder_events ENABLE ROW LEVEL SECURITY;
 
 -- Create RLS policy
-CREATE POLICY "Allow all operations for authenticated users" 
-ON public.reminder_events 
-FOR ALL 
+DROP POLICY IF EXISTS "Allow all operations for authenticated users" ON public.reminder_events;
+CREATE POLICY "Allow all operations for authenticated users"
+ON public.reminder_events
+FOR ALL
 USING (true);
 
 -- Create indexes for performance
@@ -32,6 +33,8 @@ CREATE INDEX IF NOT EXISTS idx_reminder_events_created_at ON public.reminder_eve
 CREATE INDEX IF NOT EXISTS idx_reminder_events_snoozed_until ON public.reminder_events(snoozed_until);
 
 -- Function to generate reminders for unpaid charges
+DROP FUNCTION IF EXISTS public.generate_daily_reminders();
+
 CREATE OR REPLACE FUNCTION public.generate_daily_reminders()
 RETURNS void
 LANGUAGE plpgsql

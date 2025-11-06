@@ -1,4 +1,6 @@
 -- Function to generate reminders for unpaid charges
+DROP FUNCTION IF EXISTS public.generate_daily_reminders();
+
 CREATE OR REPLACE FUNCTION public.generate_daily_reminders()
 RETURNS void
 LANGUAGE plpgsql

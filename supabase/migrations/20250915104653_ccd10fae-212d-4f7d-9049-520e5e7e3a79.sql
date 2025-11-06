@@ -1,4 +1,6 @@
 -- Function to backfill missing rental_ids for existing payments
+DROP FUNCTION IF EXISTS backfill_payment_rental_ids();
+
 CREATE OR REPLACE FUNCTION backfill_payment_rental_ids()
 RETURNS TABLE(payments_updated integer, payments_skipped integer)
 LANGUAGE plpgsql
